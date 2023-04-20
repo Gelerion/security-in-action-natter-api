@@ -56,3 +56,22 @@ descriptions for HTTP requests that can be used.
   - Understanding secure development principles
   - Identifying common attacks against APIs
   - Validating input and producing safe output
+
+
+## The OWASP Top 10
+The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
+the authoritative baseline for a secure web application. Produced by the Open Web Application Security Project (OWASP) 
+every few years, the latest edition was published in 2017 and is available from https://owasp.org/www-project-top-ten/
+
+| Web application top 10                                | API security top 10                             |
+|-------------------------------------------------------|-------------------------------------------------|
+| A1:2017 - Injection                                   | API1:2019 - Broken Object Level Authorization   |
+| A2:2017 - Broken Authentication                       | API2:2019 - Broken User Authentication          |
+| A3:2017 - Sensitive Data Exposure                     | API3:2019 - Excessive Data Exposure             |
+| A4:2017 - XML External Entities (XXE)                 | API4:2019 - Lack of Resources & Rate Limiting   |
+| A5:2017 - Broken Access Control                       | API5:2019 - Broken Function Level Authorization |
+| A6:2017 - Security Misconfiguration                   | API6:2019 - Mass Assignment                     |
+| A7:2017 - Cross-Site Scripting (XSS)                  | API7:2019 - Security Misconfiguration           |
+| A8:2017 - Insecure Deserialization                    | API8:2019 - Injection                           |
+| A9:2017 - Using Components with Known Vulnerabilities | API9:2019 - Improper Assets Management          |
+| A10:2017 - Insufficient Logging & Monitoring          | API10:2019 - Insufficient Logging & Monitoring  |
