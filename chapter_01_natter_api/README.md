@@ -78,4 +78,47 @@ reading and writing files and performing other actions. Some classes can even be
 attacker-supplied bytecode directly. Attackers can exploit this behavior by sending a carefully crafted message that 
 causes the vulnerable class to be loaded and executed.
   
-##  Producing safe output
+##  Cross-site scripting/XSS
+Cross-site scripting, or XSS, is a common vulnerability affecting web applications, in which an attacker can cause a 
+script to execute in the context of another site. In a persistent XSS, the script is stored in data on the server and 
+then executed whenever a user accesses that data through the web application. A reflected XSS occurs when a maliciously 
+crafted input to a request causes the script to be included (reflected) in the response to that request. Reflected XSS 
+is slightly harder to exploit because a victim has to be tricked into visiting a website under the attacker’s control 
+to trigger the attack. A third type of XSS, known as DOM-based XSS, attacks JavaScript code that dynamically 
+creates HTML in the browser.
+  
+These can be devastating to the security of a web application, allowing an attacker to potentially steal session cookies 
+and other credentials, and to read and alter data in that session. To appreciate why XSS is such a risk, you need to 
+understand that the security model of web browsers is based on the same-origin policy (SOP). Scripts executing within 
+the same origin (or same site) as a web page are, by default, able to read cookies set by that website, examine HTML 
+elements created by that site, make network requests to that site, and so on, although scripts from other origins are 
+blocked from doing those things. A successful XSS allows an attacker to execute their script as if it came from the 
+target origin, so the malicious script gets to do all the same things that the genuine scripts from that origin can do. 
+If I can successfully exploit an XSS vulnerability on facebook.com, for example, my script could potentially read and 
+alter your Facebook posts or steal your private message
+  
+See the `xss.html` code - once the page loads, it automatically submits the form which contains a script using JavaScript.
+Because the error response was served with the default Content-Type of `text/html`, the browser happily interprets 
+the response as HTML and executes the script, resulting in the XSS popup
+  
+![XSS example](images/xss_example.png)
+
+### Preventing XSS
+- Be strict in what you accept. If your API consumes JSON input, then require that all requests include a `Content-Type`
+header set to `application/json`. This prevents the form submission tricks that you used in this example, as an HTML form 
+cannot submit `application/json` content.
+- Ensure all outputs are well-formed using a proper JSON library rather than by concatenating strings.
+- Produce correct `Content-Type` headers on all your API’s responses, and never assume the defaults are sensible. 
+Check error responses in particular, as these are often configured to produce HTML by default.
+- If you parse the `Accept` header to decide what kind of output to produce, never simply copy the value of that 
+header into the response. Always explicitly specify the Content-Type that your API has produced.
+  
+Additionally, there are some standard security headers that you can add to all API responses to add additional protection
+for web browser clients
+```
+ response.header("X-Content-Type-Options", "nosniff");
+ response.header("X-Frame-Options", "DENY");
+ response.header("X-XSS-Protection", "0");
+ response.header("Cache-Control", "no-store");
+ response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
+```
