@@ -27,12 +27,31 @@ public class Main {
         database = Database.forDataSource(datasource);
         var spaceController = new SpaceController(database);
 
+        //[preventing XSS] validate content-type
+        before(((request, response) -> {
+            if (request.requestMethod().equals("POST") && !"application/json".equals(request.contentType())) {
+                halt(415, new JSONObject().put("error", "Only application/json supported").toString());
+            }
+        }));
+
         // it is important to set correct type headers on all responses to ensure that data
         // is processed as intended by the client
-        afterAfter((request, response) -> response.type("application/json;charset=utf-8"));
+        afterAfter((request, response) -> {
+            response.type("application/json;charset=utf-8");
+
+            //[preventing XSS] add standard security headers
+            response.header("X-Content-Type-Options", "nosniff");
+            response.header("X-Frame-Options", "DENY");
+            response.header("X-XSS-Protection", "0");
+            response.header("Cache-Control", "no-store");
+            response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
+        });
 
         post("/spaces", spaceController::createSpace);
 
+        post("/spaces/:spaceId/messages", spaceController::postMessage);
+        get("/spaces/:spaceId/messages/:msgId", spaceController::readMessage);
+        get("/spaces/:spaceId/messages", spaceController::findMessages);
 
         internalServerError(new JSONObject().put("error", "internal server error").toString());
         notFound(new JSONObject().put("error", "not found").toString());

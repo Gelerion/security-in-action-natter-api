@@ -103,6 +103,9 @@ the response as HTML and executes the script, resulting in the XSS popup
   
 ![XSS example](images/xss_example.png)
 
+Use the following branch to reproduce:  
+- [no_xss_protection branch](https://github.com/Gelerion/security-in-action-natter-api/tree/no_xss_protection/chapter_01_natter_api)
+
 ### Preventing XSS
 - Be strict in what you accept. If your API consumes JSON input, then require that all requests include a `Content-Type`
 header set to `application/json`. This prevents the form submission tricks that you used in this example, as an HTML form 
