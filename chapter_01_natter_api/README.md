@@ -62,3 +62,19 @@ database.update("INSERT INTO spaces(space_id, name, owner) VALUES(?, ?, ?);", sp
 CREATE USER natter_api_user PASSWORD 'password';               
 GRANT SELECT, INSERT ON spaces, messages TO natter_api_user;
 ```
+
+## Input validation
+Insecure deserialization
+  
+Although Java is a memory-safe language and so less prone to buffer overflow attacks, that does not mean it is immune 
+from RCE attacks. Some serialization libraries that convert arbitrary Java objects to and from string or binary formats 
+have turned out to be vulnerable to RCE attacks, known as an insecure deserialization vulnerability in the OWASP Top 10. 
+This affects Java’s built-in Serializable framework, but also parsers for supposedly safe formats like JSON have been 
+vulnerable, such as the popular Jackson Databind. a The problem occurs because Java will execute code within the default 
+constructor of any object being deserialized by these frameworks.
+  
+Some classes included with popular Java libraries perform dangerous operations in their constructors, including 
+reading and writing files and performing other actions. Some classes can even be used to load and execute 
+attacker-supplied bytecode directly. Attackers can exploit this behavior by sending a carefully crafted message that 
+causes the vulnerable class to be loaded and executed.
+  
