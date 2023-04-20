@@ -22,7 +22,7 @@ public class Main {
         var database = Database.forDataSource(datasource);
         createTables(database);
 
-
+        // using restricted user
         datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter_api_user", "password");
         database = Database.forDataSource(datasource);
         var spaceController = new SpaceController(database);
