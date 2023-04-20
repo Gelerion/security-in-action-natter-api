@@ -70,7 +70,7 @@ Although Java is a memory-safe language and so less prone to buffer overflow att
 from RCE attacks. Some serialization libraries that convert arbitrary Java objects to and from string or binary formats 
 have turned out to be vulnerable to RCE attacks, known as an insecure deserialization vulnerability in the OWASP Top 10. 
 This affects Java’s built-in Serializable framework, but also parsers for supposedly safe formats like JSON have been 
-vulnerable, such as the popular Jackson Databind. a The problem occurs because Java will execute code within the default 
+vulnerable, such as the popular Jackson Databind. The problem occurs because Java will execute code within the default 
 constructor of any object being deserialized by these frameworks.
   
 Some classes included with popular Java libraries perform dangerous operations in their constructors, including 
@@ -78,3 +78,4 @@ reading and writing files and performing other actions. Some classes can even be
 attacker-supplied bytecode directly. Attackers can exploit this behavior by sending a carefully crafted message that 
 causes the vulnerable class to be loaded and executed.
   
+##  Producing safe output
