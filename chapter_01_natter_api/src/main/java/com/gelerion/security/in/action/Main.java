@@ -29,9 +29,7 @@ public class Main {
 
         // it is important to set correct type headers on all responses to ensure that data
         // is processed as intended by the client
-        afterAfter((request, response) -> {
-            response.type("application/json;charset=utf-8");
-        });
+        afterAfter((request, response) -> response.type("application/json;charset=utf-8"));
 
         post("/spaces", spaceController::createSpace);
 
