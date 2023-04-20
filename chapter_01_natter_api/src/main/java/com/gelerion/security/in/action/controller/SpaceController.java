@@ -92,8 +92,7 @@ public class SpaceController {
         var spaceId = Long.parseLong(request.params(":spaceId"));
 
         var messages = database.findAll(Long.class,
-                "SELECT msg_id FROM messages " +
-                        "WHERE space_id = ? AND msg_time >= ?;",
+                "SELECT msg_id FROM messages WHERE space_id = ? AND msg_time >= ?;",
                 spaceId, since);
 
         response.status(200);
@@ -121,8 +120,7 @@ public class SpaceController {
         @Override
         public String toString() {
             JSONObject msg = new JSONObject();
-            msg.put("uri",
-                    "/spaces/" + spaceId + "/messages/" + msgId);
+            msg.put("uri", "/spaces/" + spaceId + "/messages/" + msgId);
             msg.put("author", author);
             msg.put("time", time.toString());
             msg.put("message", message);
