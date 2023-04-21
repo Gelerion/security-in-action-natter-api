@@ -52,10 +52,8 @@ descriptions for HTTP requests that can be used.
 ## Chapters
   
 - [1 - Secure API development](chapter_01_natter_api)
-  - Setting up an example API project
-  - Understanding secure development principles
-  - Identifying common attacks against APIs
-  - Validating input and producing safe output
+  - SQL injection
+  - XSS attacks
 
 
 ## The OWASP Top 10
