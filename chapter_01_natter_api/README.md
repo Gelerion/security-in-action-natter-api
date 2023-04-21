@@ -1,7 +1,7 @@
 ## Trying it out
 The simplest way to get up and running is by opening a terminal in the project folder and using Maven:
 ```sh
-mvn clean compile exec:java
+mvn clean compile exec:java -pl chapter_01_natter_api
 ```
 You should see log output to indicate that Spark has started an embedded Jetty server on port 4567. 
 You can then use curl to call your API operation, as in the following example:

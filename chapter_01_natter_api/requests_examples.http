@@ -1,0 +1,24 @@
+### Create space example
+POST http://localhost:4567/spaces
+Content-Type: application/json
+
+{
+  "name": "test space",
+  "owner": "demo"
+}
+
+### Post message
+POST http://localhost:4567/spaces/1/messages
+Content-Type: application/json
+
+{
+  "author": "gelerion",
+  "message": "Hello World!"
+}
+
+
+### Find messages
+GET http://localhost:4567/spaces/1/messages
+
+### Read message
+GET http://localhost:4567/spaces/1/messages/1
