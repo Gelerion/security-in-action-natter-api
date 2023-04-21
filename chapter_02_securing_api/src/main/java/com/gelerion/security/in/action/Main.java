@@ -12,6 +12,7 @@ import spark.Response;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.google.common.util.concurrent.RateLimiter;
 import static java.util.Objects.requireNonNull;
 import static spark.Spark.*;
 
@@ -26,6 +27,14 @@ public class Main {
         datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter_api_user", "password");
         database = Database.forDataSource(datasource);
         var spaceController = new SpaceController(database);
+
+        //[rate-limiting] allow just 2 API requests per second
+        var rateLimiter = RateLimiter.create(2.0d);
+        before((request, response) -> {
+            if (!rateLimiter.tryAcquire()) {
+                halt(429);
+            }
+        });
 
         //[preventing XSS] validate content-type
         before(((request, response) -> {

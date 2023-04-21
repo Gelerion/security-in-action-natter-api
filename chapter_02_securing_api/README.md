@@ -17,3 +17,26 @@ Applying security controls to the Natter API. Encryption prevents information di
 - Access control is then applied to enforce integrity and confidentiality
     
 ![Security controls](images/scurity_controls.png)
+
+### Rate limiting
+Rate-limiting should be the very first security decision made when a request reaches your API. 
+Because the goal of rate-limiting is ensuring that your API has enough resources to be able to 
+process accepted requests, you need to ensure that requests that exceed your API’s capacities 
+are rejected quickly and very early in processing. Other security controls, such as authentication, 
+can use significant resources, so rate-limiting must be applied before those processes
+
+You should implement rate-limiting as early as possible, ideally at a load balancer or reverse proxy before requests 
+even reach your API servers
+  
+Often rate-limiting is applied at a reverse proxy, API gateway, or load balancer before the request 
+reaches the API, so that it can be applied to all requests arriving at a cluster of servers. By 
+handling this at a proxy server, you also avoid excess load being generated on your application servers. 
+In this example you’ll apply simple rate-limiting in the API server itself using Google’s Guava library.
+Even if you enforce rate-limiting at a proxy server, it is good security practice to also enforce rate 
+limits in each server so that if the proxy server misbehaves or is misconfigured, it is still difficult
+to bring down the individual servers.
+
+We can then either block and wait until the rate reduces, or you can simply reject the request. 
+The standard `HTTP 429 Too Many Requests status` code can be used to indicate that rate-limiting has 
+been applied and that the client should try the request again later. You can also 
+send a `Retry-After` header to indicate how many seconds the client should wait before trying again.
