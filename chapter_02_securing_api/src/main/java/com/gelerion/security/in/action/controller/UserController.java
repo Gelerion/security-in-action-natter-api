@@ -57,4 +57,47 @@ public class UserController {
         response.header("Location", "/users/" + username);
         return new JSONObject().put("username", username);
     }
+
+    /**
+     * To authenticate a user, you’ll extract the username and password from the HTTP Basic authentication header,
+     * look up the corresponding user in the database, and finally verify the password matches the hash stored for
+     * that user. Behind the scenes, the Scrypt library will extract the salt from the stored password hash, then hash
+     * the supplied password with the same salt and parameters, and then finally compare the hashed password with the
+     * stored hash. If they match, then the user must have presented the same password and so authentication succeeds,
+     * otherwise it fails.
+     */
+    public void authenticate(Request request, Response response) {
+        var authHeader = request.headers("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Basic ")) {
+            return;
+        }
+
+        var offset = "Basic ".length();
+        var credentials = new String(Base64.getDecoder()
+                .decode(authHeader.substring(offset)), StandardCharsets.UTF_8);
+
+        var components = credentials.split(":", 2);
+        if (components.length != 2) {
+            throw new IllegalArgumentException("invalid auth header");
+        }
+
+        var username = components[0];
+        var password = components[1];
+
+        if (!username.matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException("invalid username");
+        }
+
+        var hash = database.findOptional(String.class, "SELECT pw_hash FROM users WHERE user_id = ?", username);
+
+        /*
+         Behind the scenes, the Scrypt library will extract the salt from the stored password hash, then hash the
+         supplied password with the same salt and parameters, and then finally compare the hashed password with
+         the stored hash
+         */
+        if (hash.isPresent() && SCryptUtil.check(password, hash.get())) {
+            request.attribute("subject", username);
+        }
+    }
+
 }

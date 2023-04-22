@@ -23,9 +23,12 @@ public class SpaceController {
         if (spaceName.length() > 255) {
             throw new IllegalArgumentException("space name too long");
         }
+
+        // Check that the owner of the space matches the authenticated subject
         var owner = json.getString("owner");
-        if (!owner.matches("[a-zA-Z][a-zA-Z0-9]{1,29}")) {
-            throw new IllegalArgumentException("invalid username");
+        var subject = request.attribute("subject");
+        if (!owner.equals(subject)) {
+            throw new IllegalArgumentException("owner must match authenticated user");
         }
 
         return database.withTransaction(tx -> {

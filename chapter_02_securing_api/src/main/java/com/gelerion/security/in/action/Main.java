@@ -39,6 +39,12 @@ public class Main {
             }
         });
 
+        //[authentication]
+        // - Check to see if there is an HTTP Basic Authorization header
+        // - Decode the credentials using Base64 and UTF-8
+        // - If the user exists, then use the Scrypt library to check the password
+        before(userController::authenticate);
+
         //[preventing XSS] validate content-type
         before(((request, response) -> {
             if (request.requestMethod().equals("POST") && !"application/json".equals(request.contentType())) {

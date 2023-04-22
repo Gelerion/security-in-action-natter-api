@@ -1,23 +1,18 @@
 ### Create space example
 POST http://localhost:4567/spaces
 Content-Type: application/json
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
 
 {
   "name": "test space",
   "owner": "demo"
 }
 
-### Post message
-POST http://localhost:4567/spaces/1/messages
+### Register a user
+POST http://localhost:4567/users
 Content-Type: application/json
 
 {
-  "author": "gelerion",
-  "message": "Hello World!"
+  "username": "demo",
+  "password": "password"
 }
-
-### Find messages
-GET http://localhost:4567/spaces/1/messages
-
-### Read message
-GET http://localhost:4567/spaces/1/messages/1

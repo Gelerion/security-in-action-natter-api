@@ -1,7 +1,8 @@
 -- We will store users in a new dedicated database table
-CREATE TABLE users(
-                      user_id VARCHAR(30) PRIMARY KEY,
-                      pw_hash VARCHAR(255) NOT NULL
+CREATE TABLE users
+(
+    user_id VARCHAR(30) PRIMARY KEY,
+    pw_hash VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE spaces

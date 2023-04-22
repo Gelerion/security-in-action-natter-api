@@ -76,5 +76,29 @@ attacks to recover the passwords.
 
 Before you can authenticate any users, you need some way to register them. For now, you’ll just allow any user to 
 register by making a POST request to the /users endpoint, specifying their username and chosen password.
-We will store hashed passwords in the `users` table and add an API (`UsersController`) to register users.  
   
+- We store hashed passwords in the `users` table and add an API (`UsersController`) to register users and authenticate users.  
+- We added an authentication filter that is called before every API call.
+```
+ before(userController::authenticate);
+```
+- We updated the Create Space operation to check that the owner field matches the currently authenticated user. 
+This also allows you to skip validating the username, because you can rely on the authentication service to have done that already.
+
+
+We’ve now enabled authentication for your API--every time a user makes a claim about their identity, they are required 
+to authenticate to provide proof of that claim. You’re not yet enforcing authentication on all API calls, so you can 
+still read messages without being authenticated.
+```
+$ curl -d '{"name":"test space","owner":"demo"}' -H 'Content-Type: application/json' http://localhost:4567/spaces
+
+{"error":"owner must match authenticated user"}
+```
+Register a user:
+```sh
+$ curl -d '{"username":"demo","password":"password"}' -H 'Content-Type: application/json' http://localhost:4567/users
+```
+Create Space request with correct authentication credentials
+```sh
+curl -u demo:password -d '{"name":"test space","owner":"demo"}' -H 'Content-Type: application/json' http://localhost:4567/spaces
+```
