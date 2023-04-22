@@ -54,7 +54,9 @@ descriptions for HTTP requests that can be used.
 - [1 - Secure API development](chapter_01_natter_api)
   - SQL injection
   - XSS attacks
-
+- [2 - Basic Authentication/Authorization](chapter_02_securing_api)
+  - Rate limiting
+  - Effective password Authentication using Scrypt
 
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 

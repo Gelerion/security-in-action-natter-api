@@ -40,3 +40,41 @@ We can then either block and wait until the rate reduces, or you can simply reje
 The standard `HTTP 429 Too Many Requests status` code can be used to indicate that rate-limiting has 
 been applied and that the client should try the request again later. You can also 
 send a `Retry-After` header to indicate how many seconds the client should wait before trying again.
+
+### Password Authentication
+Authentication makes sure that users are who they say they are, preventing spoofing. 
+This is essential for accountability, but also a foundation for other security controls.
+
+Apart from rate-limiting (which is applied to all requests regardless of who they come from), authentication is the 
+first process we perform. Downstream security controls, such as audit logging and access control, will almost always 
+need to know who the user is. It is important to realize that the authentication phase itself shouldn't reject a request 
+even if authentication fails. Deciding whether any particular request requires the user to be authenticated is the job 
+of access control.
+  
+#### HTTP Basic authentication
+There are many ways of authenticating a user, but one of the most widespread is simple username and 
+password authentication. This is a simple standard scheme, specified in RFC [7617](https://tools.ietf.org/html/rfc7617), 
+in which the username and password are encoded (using [Base64](https://en.wikipedia.org/wiki/Base64) encoding) and sent 
+in a header. 
+  
+Header example:
+```
+Authorization: Basic ZGVtbzpjaGFuZ2VpdA==
+```
+```
+jshell> new String(Base64.getDecoder().decode("ZGVtbzpjaGFuZ2VpdA=="), "UTF-8")
+=> "demo:changeit"
+```
+
+#### Securely store and validate that password
+A password hashing algorithm converts each password into a fixed-length random-looking string. When the user tries to
+log in, the password they present is hashed using the same algorithm and compared to the hash stored in the database. 
+This allows the password to be checked without storing it directly. Modern password hashing algorithms, 
+such as `Argon2`, `Scrypt`, `Bcrypt`, or `PBKDF2`, are designed to resist a variety of attacks in case the hashed passwords 
+are ever stolen. In particular, they are designed to take a lot of time or memory to process to prevent brute-force 
+attacks to recover the passwords.
+
+Before you can authenticate any users, you need some way to register them. For now, you’ll just allow any user to 
+register by making a POST request to the /users endpoint, specifying their username and chosen password.
+We will store hashed passwords in the `users` table and add an API (`UsersController`) to register users.  
+  

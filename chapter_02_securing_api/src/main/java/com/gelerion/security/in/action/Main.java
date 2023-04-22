@@ -1,6 +1,7 @@
 package com.gelerion.security.in.action;
 
 import com.gelerion.security.in.action.controller.SpaceController;
+import com.gelerion.security.in.action.controller.UserController;
 import org.dalesbred.Database;
 import org.dalesbred.result.EmptyResultException;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -26,7 +27,9 @@ public class Main {
         // using restricted user
         datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter_api_user", "password");
         database = Database.forDataSource(datasource);
+
         var spaceController = new SpaceController(database);
+        var userController = new UserController(database);
 
         //[rate-limiting] allow just 2 API requests per second
         var rateLimiter = RateLimiter.create(2.0d);
@@ -61,6 +64,8 @@ public class Main {
         post("/spaces/:spaceId/messages", spaceController::postMessage);
         get("/spaces/:spaceId/messages/:msgId", spaceController::readMessage);
         get("/spaces/:spaceId/messages", spaceController::findMessages);
+
+        post("/users", userController::registerUser);
 
         internalServerError(new JSONObject().put("error", "internal server error").toString());
         notFound(new JSONObject().put("error", "not found").toString());
