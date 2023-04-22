@@ -102,3 +102,52 @@ Create Space request with correct authentication credentials
 ```sh
 curl -u demo:password -d '{"name":"test space","owner":"demo"}' -H 'Content-Type: application/json' http://localhost:4567/spaces
 ```
+  
+### Encryption to keep data private (TLS)
+In this case, sending passwords in clear text is a pretty big vulnerability, so let’s fix that by enabling HTTPS. 
+HTTPS is normal HTTP, but the connection occurs over Transport Layer Security (TLS), which provides encryption and 
+integrity protection. Once correctly configured, TLS is largely transparent to the API because it occurs at a lower 
+level in the protocol stack and the API still sees normal requests and responses.
+
+HTTPS is used to encrypt and protect data being transmitted (in transit) to and from you API
+
+> **_NOTE:_**  Transport Layer Security (TLS) is a protocol that sits on top of TCP/IP and provides several basic 
+> security functions to allow secure communication between a client and a server. Early versions of TLS were known 
+> as the Secure Socket Layer, or SSL, and you’ll often still hear TLS referred to as SSL. Application protocols 
+> that use TLS often have an S appended to their name, for example HTTPS or LDAPS, to stand for “secure.”
+
+TLS ensures confidentiality and integrity of data transmitted between the client and server. It does this by encrypting 
+and authenticating all data flowing between the two parties. The first time a client connects to a server, 
+a TLS handshake is performed in which the server authenticates to the client, to guarantee that the client 
+connected to the server it wanted to connect to (and not to a server under an attacker’s control). 
+Then fresh cryptographic keys are negotiated for this session and used to encrypt and authenticate 
+every request and response from then on.
+
+#### Enabling HTTPS
+Enabling HTTPS support in Spark is straightforward. First, you need to generate a certificate that the API will use to 
+authenticate itself to its clients. When a client connects to your API it will use a URI that includes the hostname 
+of the server the API is running on, for example `api.example.com`. The server must present a certificate, signed 
+by a trusted certificate authority (CA), that says that it really is the server for `api.example.com`. 
+If an invalid certificate is presented, or it doesn't match the host that the client wanted to connect to, then the 
+client will abort the connection. Without this step, the client might be tricked into connecting to the wrong server 
+and then send its password or other confidential data to the imposter.
+
+Because you’re enabling HTTPS for development purposes only, you could use a self-signed certificate.
+A tool called [mkcert](https://mkcert.dev) simplifies the process considerably. Follow the instructions on the `mkcert`
+homepage to install it, and then run.
+```sh
+mkcert -install
+```
+You can now generate a certificate for your Spark server running on localhost. By default, `mkcert` generates 
+certificates in Privacy Enhanced Mail (`PEM`) format. For Java, you need the certificate in `PKCS#12` format, 
+so run the following command in the root folder of the Natter project to generate a certificate for localhost:
+```sh
+mkcert -pkcs12 localhost
+```
+The certificate and private key will be generated in a file called `localhost.p12`.
+By default, the password for this file is `changeit`
+  
+You can now enable HTTPS support in Spark by adding a call to the `secure()` static method
+```
+secure("localhost.p12", "changeit", null, null);
+```

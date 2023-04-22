@@ -20,6 +20,13 @@ import static spark.Spark.*;
 public class Main {
 
     public static void main(String... args) throws Exception {
+        //[tls] enable HTTPS support in Spark by adding a call to the secure() static method.
+        //The first two arguments to the method give the name of the keystore file containing
+        //the server certificate and private key.
+        //During an SSL handshake, the server looks up the private key from the keystore, and presents its
+        // corresponding public key and certificate to the client
+        secure("localhost.p12", "changeit", null, null);
+
         var datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter", "password");
         var database = Database.forDataSource(datasource);
         createTables(database);

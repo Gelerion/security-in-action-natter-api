@@ -57,6 +57,7 @@ descriptions for HTTP requests that can be used.
 - [2 - Basic Authentication/Authorization](chapter_02_securing_api)
   - Rate limiting
   - Effective password Authentication using Scrypt
+  - Encryption to keep data private (TLS)
 
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
