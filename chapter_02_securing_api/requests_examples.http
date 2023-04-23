@@ -1,5 +1,5 @@
 ### Create space example
-POST http://localhost:4567/spaces
+POST https://localhost:4567/spaces
 Content-Type: application/json
 Authorization: Basic ZGVtbzpwYXNzd29yZA==
 
@@ -9,7 +9,7 @@ Authorization: Basic ZGVtbzpwYXNzd29yZA==
 }
 
 ### Register a user
-POST http://localhost:4567/users
+POST https://localhost:4567/users
 Content-Type: application/json
 
 {

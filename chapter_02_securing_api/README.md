@@ -151,3 +151,10 @@ You can now enable HTTPS support in Spark by adding a call to the `secure()` sta
 ```
 secure("localhost.p12", "changeit", null, null);
 ```
+
+#### Testing the API
+If curl refuses to connect, you can use the `--cacert` option to curl to tell it to trust the mkcert certificate:
+```sh
+$ curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -d '{"username":"demo","password":"password"}' \
+-H 'Content-Type: application/json' https://localhost:4567/users
+```

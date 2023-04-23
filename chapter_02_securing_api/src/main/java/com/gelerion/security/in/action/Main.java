@@ -25,7 +25,7 @@ public class Main {
         //the server certificate and private key.
         //During an SSL handshake, the server looks up the private key from the keystore, and presents its
         // corresponding public key and certificate to the client
-        //secure("localhost.p12", "changeit", null, null);
+        secure("chapter_02_securing_api/localhost.p12", "changeit", null, null);
 
         var datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter", "password");
         var database = Database.forDataSource(datasource);
