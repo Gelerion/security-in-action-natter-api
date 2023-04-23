@@ -1,3 +1,12 @@
+### Register a user
+POST https://localhost:4567/users
+Content-Type: application/json
+
+{
+  "username": "demo",
+  "password": "password"
+}
+
 ### Create space example
 POST https://localhost:4567/spaces
 Content-Type: application/json
@@ -8,11 +17,7 @@ Authorization: Basic ZGVtbzpwYXNzd29yZA==
   "owner": "demo"
 }
 
-### Register a user
-POST https://localhost:4567/users
+### Read audit log
+GET https://localhost:4567/logs
 Content-Type: application/json
-
-{
-  "username": "demo",
-  "password": "password"
-}
+Authorization: Basic ZGVtbzpwYXNzd29yZA==

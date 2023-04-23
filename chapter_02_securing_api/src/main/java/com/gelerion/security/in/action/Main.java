@@ -1,5 +1,6 @@
 package com.gelerion.security.in.action;
 
+import com.gelerion.security.in.action.controller.AuditController;
 import com.gelerion.security.in.action.controller.SpaceController;
 import com.gelerion.security.in.action.controller.UserController;
 import org.dalesbred.Database;
@@ -37,6 +38,7 @@ public class Main {
 
         var spaceController = new SpaceController(database);
         var userController = new UserController(database);
+        var auditController = new AuditController(database);
 
         //[rate-limiting] allow just 2 API requests per second
         var rateLimiter = RateLimiter.create(2.0d);
@@ -45,12 +47,6 @@ public class Main {
                 halt(429);
             }
         });
-
-        //[authentication]
-        // - Check to see if there is an HTTP Basic Authorization header
-        // - Decode the credentials using Base64 and UTF-8
-        // - If the user exists, then use the Scrypt library to check the password
-        before(userController::authenticate);
 
         //[preventing XSS] validate content-type
         before(((request, response) -> {
@@ -72,13 +68,26 @@ public class Main {
             response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
         });
 
+        //[authentication]
+        // - Check to see if there is an HTTP Basic Authorization header
+        // - Decode the credentials using Base64 and UTF-8
+        // - If the user exists, then use the Scrypt library to check the password
+        before(userController::authenticate);
+
+        //[audit]
+        before(auditController::auditRequestStart);
+        afterAfter(auditController::auditRequestEnd);
+
         post("/spaces", spaceController::createSpace);
 
         post("/spaces/:spaceId/messages", spaceController::postMessage);
         get("/spaces/:spaceId/messages/:msgId", spaceController::readMessage);
         get("/spaces/:spaceId/messages", spaceController::findMessages);
 
+        //[authentication]
         post("/users", userController::registerUser);
+        //[audit]
+        get("/logs", auditController::readAuditLog);
 
         internalServerError(new JSONObject().put("error", "internal server error").toString());
         notFound(new JSONObject().put("error", "not found").toString());

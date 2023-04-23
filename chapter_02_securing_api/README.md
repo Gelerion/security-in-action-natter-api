@@ -158,3 +158,20 @@ If curl refuses to connect, you can use the `--cacert` option to curl to tell it
 $ curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -d '{"username":"demo","password":"password"}' \
 -H 'Content-Type: application/json' https://localhost:4567/users
 ```
+  
+### Audit logging
+Audit logging should occur both before a request is processed and after it completes. When implemented 
+as a filter, it should be placed after authentication, so that you know who is performing each action, 
+but before access control checks so that you record operations that were attempted but denied.
+  
+> In a production environment you typically will want to send audit logs to a centralized log collection and analysis tool
+
+We split the logging into two filters, one that occurs before the request is processed 
+(after authentication), and one that occurs after the response has been produced. We’ll also allow 
+access to the logs to anyone for illustration purposes. You should normally lock down audit logs to 
+only a small number of trusted users, as they are often sensitive in themselves.
+  
+Reading the log:
+```sh
+$ curl pem https://localhost:4567/logs | jq
+```
