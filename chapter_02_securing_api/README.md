@@ -175,3 +175,14 @@ Reading the log:
 ```sh
 $ curl pem https://localhost:4567/logs | jq
 ```
+  
+### Access control
+Access control should happen after authentication, so that you know who is trying to perform the action.
+If the request is granted, then it can proceed through to the application logic. However, if it is 
+denied by the access control rules, then it should be failed immediately, and an error response 
+returned to the user. The two main HTTP status codes for indicating that access has been denied
+are `401 Unauthorized` and `403 Forbidden`
+  
+Usually access control consist of:
+- Enforcing authentication
+- Access control lists

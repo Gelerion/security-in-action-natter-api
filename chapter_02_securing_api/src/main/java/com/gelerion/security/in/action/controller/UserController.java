@@ -100,4 +100,15 @@ public class UserController {
         }
     }
 
+    /*
+     If no subject attribute is found, then it rejects the request with a 401 status code and adds a standard
+     WWW-Authenticate header to inform the client that the user should authenticate with Basic authentication.
+     */
+    public void requireAuthentication(Request request, Response response) {
+        if (request.attribute("subject") == null) {
+            response.header("WWW-Authenticate", "Basic realm=\"/\", charset=\"UTF-8\"");
+            halt(401);
+        }
+    }
+
 }

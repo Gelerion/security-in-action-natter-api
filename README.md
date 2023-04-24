@@ -59,6 +59,7 @@ descriptions for HTTP requests that can be used.
   - Effective password Authentication using Scrypt
   - Encryption to keep data private (TLS)
   - Audit logging
+  - Access control
 
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 

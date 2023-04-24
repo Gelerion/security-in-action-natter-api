@@ -55,7 +55,23 @@ public class Main {
             }
         }));
 
-        // it is important to set correct type headers on all responses to ensure that data
+        //[authentication]
+        // - Check to see if there is an HTTP Basic Authorization header
+        // - Decode the credentials using Base64 and UTF-8
+        // - If the user exists, then use the Scrypt library to check the password
+        before(userController::authenticate);
+
+        //[audit]
+        before(auditController::auditRequestStart);
+
+        //[access control] enforce authentication -- require that all users are authenticated.
+        //This ensures that only genuine users of the API can gain access, while not enforcing any further requirements
+        before("/spaces", userController::requireAuthentication);
+
+        //[audit]
+        afterAfter(auditController::auditRequestEnd);
+
+        //[preventing XSS] it is important to set correct type headers on all responses to ensure that data
         // is processed as intended by the client
         afterAfter((request, response) -> {
             response.type("application/json;charset=utf-8");
@@ -67,16 +83,6 @@ public class Main {
             response.header("Cache-Control", "no-store");
             response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
         });
-
-        //[authentication]
-        // - Check to see if there is an HTTP Basic Authorization header
-        // - Decode the credentials using Base64 and UTF-8
-        // - If the user exists, then use the Scrypt library to check the password
-        before(userController::authenticate);
-
-        //[audit]
-        before(auditController::auditRequestStart);
-        afterAfter(auditController::auditRequestEnd);
 
         post("/spaces", spaceController::createSpace);
 
