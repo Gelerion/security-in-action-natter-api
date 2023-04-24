@@ -21,3 +21,8 @@ Authorization: Basic ZGVtbzpwYXNzd29yZA==
 GET https://localhost:4567/logs
 Content-Type: application/json
 Authorization: Basic ZGVtbzpwYXNzd29yZA==
+
+### Read messages (create demo2 user first to get 403)
+GET https://localhost:4567/spaces/1/messages/1
+Content-Type: application/json
+Authorization: Basic ZGVtbzI6cGFzc3dvcmQ= #demo2

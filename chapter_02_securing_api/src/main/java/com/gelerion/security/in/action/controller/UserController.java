@@ -111,4 +111,27 @@ public class UserController {
         }
     }
 
+    public Filter requirePermission(String method, String permission) {
+        return (request, response) -> {
+            // ignore requests that don’t match the request method
+            if (!method.equalsIgnoreCase(request.requestMethod())) {
+                return;
+            }
+
+            // check if the user is authenticated
+            requireAuthentication(request, response);
+
+            var spaceId = Long.parseLong(request.params(":spaceId"));
+            var username = (String) request.attribute("subject");
+
+            var perms = database.findOptional(String.class,
+                    "SELECT perms FROM permissions WHERE space_id = ? AND user_id = ?",
+                    spaceId, username).orElse("");
+
+            if (!perms.contains(permission)) {
+                halt(403);
+            }
+        };
+    }
+
 }

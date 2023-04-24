@@ -186,3 +186,15 @@ are `401 Unauthorized` and `403 Forbidden`
 Usually access control consist of:
 - Enforcing authentication
 - Access control lists
+  
+An access control list is a list of users that can access a given object, together with a set of 
+permissions that define what each user can do.
+Permissions will be granted to users in a new `permissions` table, which links a user to a set of permissions in a 
+given social space 
+  
+With everything in place, if you create a second user “demo2” and try to read a message created by the 
+existing demo user in their space, then you get a 403 Forbidden response:
+```sh
+curl -i -u demo2:password https://localhost:4567/spaces/1/messages/1
+# HTTP/1.1 403 Forbidden
+```

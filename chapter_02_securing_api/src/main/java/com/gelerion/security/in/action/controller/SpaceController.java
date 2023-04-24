@@ -33,9 +33,12 @@ public class SpaceController {
 
         return database.withTransaction(tx -> {
             var spaceId = database.findUniqueLong("SELECT NEXT VALUE FOR space_id_seq;");
-
             database.updateUnique("INSERT INTO spaces(space_id, name, owner) VALUES(?, ?, ?);",
                     spaceId, spaceName, owner);
+
+            //[access control lists] ensure the space owner has all permissions on the newly created space
+            database.updateUnique("INSERT INTO permissions(space_id, user_id, perms) VALUES(?, ?, ?)",
+                    spaceId, owner, "rwd");
 
             response.status(201);
             response.header("Location", "/spaces/" + spaceId);
