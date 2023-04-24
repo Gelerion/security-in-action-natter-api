@@ -93,6 +93,13 @@ public class Main {
         before("/spaces/:spaceId/messages", userController.requirePermission("GET", "r"));
         get("/spaces/:spaceId/messages", spaceController::findMessages);
 
+        //add members
+        //rwd - only space admin can add other users
+        //avoiding privilege escalation attacks - occurs when a user with limited permissions can exploit a bug in the
+        // system to grant themselves or somebody else more permissions than they have been granted
+        before("/spaces/:spaceId/members", userController.requirePermission("POST", "rwd"));
+        post("/spaces/:spaceId/members", spaceController::addMember);
+
         //[authentication]
         post("/users", userController::registerUser);
         //[audit]
