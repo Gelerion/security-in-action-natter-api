@@ -1,0 +1,18 @@
+### Register a user
+POST https://localhost:4567/users
+Content-Type: application/json
+
+{
+  "username": "demo",
+  "password": "password"
+}
+
+### Create space example
+POST https://localhost:4567/spaces
+Content-Type: application/json
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+
+{
+  "name": "test space",
+  "owner": "demo"
+}
