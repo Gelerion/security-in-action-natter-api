@@ -60,6 +60,10 @@ descriptions for HTTP requests that can be used.
   - Encryption to keep data private (TLS)
   - Audit logging
   - Access control
+- [3 - Session cookie authentication](chapter_03_session_cookie_auth)
+  - Token-based authentication
+  - Using session cookies
+  - Preventing cross-site request forgery attacks
 
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
