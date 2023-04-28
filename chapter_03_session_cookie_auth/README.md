@@ -73,3 +73,21 @@ curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -i -u test:password -H 'Content-Typ
 #=> Set-Cookie: JSESSIONID=node0hwk7s0nq6wvppqh0wbs0cha91.node0;Path=/;Secure;HttpOnly
 #=> {"token":"node0hwk7s0nq6wvppqh0wbs0cha91"}
 ```
+
+### Cookie security attributes
+
+| Cookie attribute     | Meaning                                                                                                                                                                                                                                                                                                                                                                                              |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Secure               | Secure cookies are only ever sent over a HTTPS connection                                                                                                                                                                                                                                                                                                                                            |
+| HttpOnly             | Cookies marked HttpOnly cannot be read by JavaScript                                                                                                                                                                                                                                                                                                                                                 |
+| SameSite             | will only be sent on requests that originate from the same origin as the cookie                                                                                                                                                                                                                                                                                                                      |
+| Domain               | If no Domain attribute is present, then a cookie will only be sent on requests to the exact host that issued the Set-Cookie header. This is known as a host-only cookie. If you set a Domain attribute, then the cookie will be sent on requests to that domain and all sub-domains. For example, a cookie with Domain=example.com will be sent on requests to api.example.com and www .example.com  | 
+| Path                 | If the Path attribute is set to /users, then the cookie will be sent on any request to a URL that matches /users or any sub-path such as /users/mary, but not on a request to /cats/mrmistoffelee                                                                                                                                                                                                    |
+| Expires and Max-Age  | Sets the time at which the cookie expires and should be forgotten by the client, either as an explicit date and time (Expires) or as the number of seconds from now (Max-Age)                                                                                                                                                                                                                        |
+
+#### Persistent cookies
+A cookie with an explicit Expires or Max-Age attribute is known as a persistent cookie and will be permanently 
+stored by the browser until the expiry time is reached, even if the browser is restarted. Cookies without these 
+attributes are known as session cookies (even if they have nothing to do with a session token) and are deleted 
+when the browser window or tab is closed. You should avoid adding the Max-Age or Expires attributes to your 
+authentication session cookies so that the user is effectively logged out when they close their browser tab

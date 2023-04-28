@@ -19,7 +19,15 @@ public class CookieTokenStore implements TokenStore {
     public String create(Request request, Token token) {
         //Suffers from a vulnerability known as session fixation!
         //You can prevent session fixation attacks by ensuring that any existing session is invalidated after a user authenticates
-        var session = request.session(true);
+        //var session = request.session(true);
+
+        //check if the client has an existing session
+        var session = request.session(false);
+        if (session != null) {
+            //Invalidate any existing session to ensure that the next call to request.session(true) will create a new one
+            session.invalidate();
+        }
+        session = request.session(true);
 
         session.attribute("username", token.username);
         session.attribute("expiry", token.expiry);
