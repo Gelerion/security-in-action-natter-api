@@ -2,7 +2,10 @@ package com.gelerion.security.in.action;
 
 import com.gelerion.security.in.action.controller.AuditController;
 import com.gelerion.security.in.action.controller.SpaceController;
+import com.gelerion.security.in.action.controller.TokenController;
 import com.gelerion.security.in.action.controller.UserController;
+import com.gelerion.security.in.action.token.CookieTokenStore;
+import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
 import org.dalesbred.Database;
 import org.dalesbred.result.EmptyResultException;
@@ -30,7 +33,7 @@ public class Main {
         //the server certificate and private key.
         //During an SSL handshake, the server looks up the private key from the keystore, and presents its
         // corresponding public key and certificate to the client
-        secure("chapter_03_securing_api/localhost.p12", "changeit", null, null);
+        secure("chapter_02_securing_api/localhost.p12", "changeit", null, null);
 
         var datasource = JdbcConnectionPool.create("jdbc:h2:mem:natter", "natter", "password");
         var database = Database.forDataSource(datasource);
@@ -43,6 +46,8 @@ public class Main {
         var spaceController = new SpaceController(database);
         var userController = new UserController(database);
         var auditController = new AuditController(database);
+        TokenStore tokenStore = new CookieTokenStore();
+        var tokenController = new TokenController(tokenStore);
 
         //[rate-limiting] allow just 2 API requests per second
         var rateLimiter = RateLimiter.create(2.0d);
@@ -59,16 +64,6 @@ public class Main {
             }
         }));
 
-        //[authentication]
-        // - Check to see if there is an HTTP Basic Authorization header
-        // - Decode the credentials using Base64 and UTF-8
-        // - If the user exists, then use the Scrypt library to check the password
-        before(userController::authenticate);
-
-        //[audit]
-        before(auditController::auditRequestStart);
-        afterAfter(auditController::auditRequestEnd);
-
         //[preventing XSS] it is important to set correct type headers on all responses to ensure that data
         // is processed as intended by the client
         afterAfter((request, response) -> {
@@ -81,6 +76,22 @@ public class Main {
             response.header("Cache-Control", "no-store");
             response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
         });
+
+        //[authentication]
+        // - Check to see if there is an HTTP Basic Authorization header
+        // - Decode the credentials using Base64 and UTF-8
+        // - If the user exists, then use the Scrypt library to check the password
+        before(userController::authenticate);
+
+        //[audit]
+        before(auditController::auditRequestStart);
+        afterAfter(auditController::auditRequestEnd);
+
+        //[token-based auth] after basic auth and audit log
+        // rather than have a /login endpoint, we’ll treat session tokens as a resource and treat logging in
+        // as creating a new session resource
+        before("/sessions", userController::requireAuthentication);
+        post("/sessions", tokenController::login);
 
         //[access control] enforce authentication -- require that all users are authenticated.
         //This ensures that only genuine users of the API can gain access, while not enforcing any further requirements

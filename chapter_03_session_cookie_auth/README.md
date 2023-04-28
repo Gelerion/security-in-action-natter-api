@@ -40,3 +40,36 @@ So, where did this come from? Because your JavaScript client did not supply a us
 REST API request, the API responded with a standard HTTP 401 Unauthorized status and a WWW-Authenticate header prompting 
 for authentication using the Basic scheme. The browser understands the Basic authentication scheme, so it pops up a 
 dialog box automatically to prompt the user for a username and password.
+
+### Cookie-based Token authentication
+You want is a way for users to login once and then be trusted for the next hour or so while they use the API. 
+This is the purpose of token-based authentication, and in the form of session cookies.
+
+When a user logs in by presenting their username and password, the API will generate a random string (the token) and 
+give it to the client. The client then presents the token on each subsequent request, and the API can look up the token 
+in a database on the server to see which user is associated with that session. When the user logs out, or the token 
+expires, it is deleted from the database, and the user must log in again if they want to keep using the API
+
+![token-based](images/token-based-auth.png)
+
+Cookies are a great choice for first-party clients running on the same origin as the API they are talking to but can 
+be difficult when dealing with third-party clients and clients hosted on other domains.
+
+#### Session cookies
+After the user authenticates, the login endpoint returns a Set-Cookie header on the response that instructs 
+the web browser to store a random session token in the cookie storage. Subsequent requests to the same site will 
+include the token as a Cookie header. The server can then look up the cookie token in a database to see which user 
+is associated with that toke
+
+#### Try it out
+- create a test user
+```sh
+curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/json' -d '{"username":"test","password":"password"}' https://localhost:4567/users
+#=> {"username":"test"}
+```
+- call the new `/sessions` endpoint, passing in the username and password using HTTP Basic authentication to get a new session cookie
+```sh
+curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -i -u test:password -H 'Content-Type: application/json' -X POST https://localhost:4567/sessions
+#=> Set-Cookie: JSESSIONID=node0hwk7s0nq6wvppqh0wbs0cha91.node0;Path=/;Secure;HttpOnly
+#=> {"token":"node0hwk7s0nq6wvppqh0wbs0cha91"}
+```
