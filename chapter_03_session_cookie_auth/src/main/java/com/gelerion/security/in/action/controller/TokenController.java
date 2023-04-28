@@ -27,11 +27,17 @@ public class TokenController {
                 .put("token", tokenId);
     }
 
+    /*
+    The existing HTTP Basic authentication filter populates the subject attribute on the request if valid
+    credentials are found, and later access control filters check for the presence of this subject attribute.
+    You can allow requests with a session cookie to proceed by implementing the same contract: if a valid session
+    cookie is present, then extract the username from the session and set it as the subject attribute in the request
+     */
     public void validateToken(Request request, Response response) {
-        var tokenId = request.headers("X-CSRF-Token");
-        if (tokenId == null) return;
-
-        tokenStore.read(request, tokenId).ifPresent(token -> {
+        //Because the CookieTokenStore can determine the token associated with a request by looking at the cookies,
+        //you can leave the tokenId argument null for now when looking up the token in the tokenStore
+        // WARNING: CSRF attack possible
+        tokenStore.read(request, null).ifPresent(token -> {
             if (now().isBefore(token.expiry)) {
                 request.attribute("subject", token.username);
                 token.attributes.forEach(request::attribute);

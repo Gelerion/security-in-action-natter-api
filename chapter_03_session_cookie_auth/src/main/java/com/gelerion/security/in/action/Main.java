@@ -77,11 +77,16 @@ public class Main {
             response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
         });
 
+        //If either filter succeeds, then the subject attribute will be populated in the request
+        //and subsequent access control checks will pass
+
         //[authentication]
         // - Check to see if there is an HTTP Basic Authorization header
         // - Decode the credentials using Base64 and UTF-8
         // - If the user exists, then use the Scrypt library to check the password
         before(userController::authenticate);
+        //[token-based auth]
+        before(tokenController::validateToken);
 
         //[audit]
         before(auditController::auditRequestStart);

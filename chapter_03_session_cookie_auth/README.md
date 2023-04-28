@@ -76,14 +76,14 @@ curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -i -u test:password -H 'Content-Typ
 
 ### Cookie security attributes
 
-| Cookie attribute     | Meaning                                                                                                                                                                                                                                                                                                                                                                                              |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Secure               | Secure cookies are only ever sent over a HTTPS connection                                                                                                                                                                                                                                                                                                                                            |
-| HttpOnly             | Cookies marked HttpOnly cannot be read by JavaScript                                                                                                                                                                                                                                                                                                                                                 |
-| SameSite             | will only be sent on requests that originate from the same origin as the cookie                                                                                                                                                                                                                                                                                                                      |
-| Domain               | If no Domain attribute is present, then a cookie will only be sent on requests to the exact host that issued the Set-Cookie header. This is known as a host-only cookie. If you set a Domain attribute, then the cookie will be sent on requests to that domain and all sub-domains. For example, a cookie with Domain=example.com will be sent on requests to api.example.com and www .example.com  | 
-| Path                 | If the Path attribute is set to /users, then the cookie will be sent on any request to a URL that matches /users or any sub-path such as /users/mary, but not on a request to /cats/mrmistoffelee                                                                                                                                                                                                    |
-| Expires and Max-Age  | Sets the time at which the cookie expires and should be forgotten by the client, either as an explicit date and time (Expires) or as the number of seconds from now (Max-Age)                                                                                                                                                                                                                        |
+| Cookie attribute     | Meaning                                                                                                                                                                                                                                                                                                                                                                                             |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Secure               | Secure cookies are only ever sent over a HTTPS connection                                                                                                                                                                                                                                                                                                                                           |
+| HttpOnly             | Cookies marked HttpOnly cannot be read by JavaScript                                                                                                                                                                                                                                                                                                                                                |
+| SameSite             | Will only be sent on requests that originate from the same origin as the cookie (to prevent CSRF attacks)                                                                                                                                                                                                                                                                                           |
+| Domain               | If no Domain attribute is present, then a cookie will only be sent on requests to the exact host that issued the Set-Cookie header. This is known as a host-only cookie. If you set a Domain attribute, then the cookie will be sent on requests to that domain and all sub-domains. For example, a cookie with Domain=example.com will be sent on requests to api.example.com and www .example.com | 
+| Path                 | If the Path attribute is set to `/users`, then the cookie will be sent on any request to a URL that matches `/users` or any sub-path such as `/users/mary`, but not on a request to `/cats/mrmistoffelee`                                                                                                                                                                                           |
+| Expires and Max-Age  | Sets the time at which the cookie expires and should be forgotten by the client, either as an explicit date and time (Expires) or as the number of seconds from now (Max-Age)                                                                                                                                                                                                                       |
 
 #### Persistent cookies
 A cookie with an explicit Expires or Max-Age attribute is known as a persistent cookie and will be permanently 
@@ -91,3 +91,32 @@ stored by the browser until the expiry time is reached, even if the browser is r
 attributes are known as session cookies (even if they have nothing to do with a session token) and are deleted 
 when the browser window or tab is closed. You should avoid adding the Max-Age or Expires attributes to your 
 authentication session cookies so that the user is effectively logged out when they close their browser tab
+
+#### Making requests using a session cookie instead of using HTTP Basic on every request
+- create a test user
+```sh
+curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/json' -d '{"username":"test","password":"password"}' https://localhost:4567/users
+```
+-  the `-c` option to save cookies from the response to a file
+```sh
+curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -i -c /tmp/cookies -u test:password -H 'Content-Type: application/json' -X POST https://localhost:4567/sessions
+```
+- make a call to an API endpoint
+```sh
+curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -b /tmp/cookies -H 'Content-Type: application/json' -d '{"name":"test space","owner":"test"}' https://localhost:4567/spaces
+```
+  
+### Defense against CSRF attacks
+The most effective defense against CSRF attacks is to require that the caller prove that they know the session cookie, 
+or some other unguessable value associated with the session. A common pattern for preventing CSRF in traditional 
+web applications is to generate a random string and store it as an attribute on the session. Whenever the application 
+generates an HTML form, it includes the random token as a hidden field. When the form is submitted, the server checks 
+that the form data contains this hidden field and that the value matches the value stored in the session associated 
+with the cookie. Any form data that is received without the hidden field is rejected. This effectively prevents 
+CSRF attacks because an attacker cannot guess the random fields and so cannot forge a correct request.
+
+>**_NOTE:_**  A double-submit cookie is a cookie that must also be sent as a custom header on every request. 
+> As cross-origin scripts are not able to read the value of the cookie, they cannot create the custom header value, 
+> so this is an effective defense against CSRF attacks
+
+![csrf-protection](images/csrf_protection.png)
