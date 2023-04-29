@@ -15,6 +15,9 @@ public interface TokenStore {
     //look up a token by ID
     Optional<Token> read(Request request, String tokenId);
 
+    //logout
+    void revoke(Request request, String tokenId);
+
     class Token {
         public final Instant expiry;
         public final String username;

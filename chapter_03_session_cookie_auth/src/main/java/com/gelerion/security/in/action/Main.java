@@ -97,6 +97,7 @@ public class Main {
         // as creating a new session resource
         before("/sessions", userController::requireAuthentication);
         post("/sessions", tokenController::login);
+        delete("/sessions", tokenController::logout);
 
         //[access control] enforce authentication -- require that all users are authenticated.
         //This ensures that only genuine users of the API can gain access, while not enforcing any further requirements

@@ -106,7 +106,8 @@ public class UserController {
      */
     public void requireAuthentication(Request request, Response response) {
         if (request.attribute("subject") == null) {
-            response.header("WWW-Authenticate", "Basic realm=\"/\", charset=\"UTF-8\"");
+            //for custom login form -- stop the browser popping up the ugly default login box
+            //response.header("WWW-Authenticate", "Basic realm=\"/\", charset=\"UTF-8\"");
             halt(401);
         }
     }

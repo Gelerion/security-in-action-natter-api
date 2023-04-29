@@ -48,7 +48,7 @@ public class CookieTokenStore implements TokenStore {
         var provided = Base64url.decode(tokenId);
         var computed = sha256(session.id());
 
-        //consatnt time equals
+        //constant time equals
         if (!MessageDigest.isEqual(computed, provided)) {
             return Optional.empty();
         }
@@ -57,6 +57,21 @@ public class CookieTokenStore implements TokenStore {
         token.attributes.putAll(session.attribute("attrs"));
 
         return Optional.of(token);
+    }
+
+    @Override
+    public void revoke(Request request, String tokenId) {
+        var session = request.session(false);
+        if (session == null) return;
+
+        var provided = Base64url.decode(tokenId);
+        var computed = sha256(session.id());
+
+        if (!MessageDigest.isEqual(computed, provided)) {
+            return;
+        }
+
+        session.invalidate();
     }
 
     static byte[] sha256(String tokenId) {

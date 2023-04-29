@@ -148,3 +148,6 @@ take a constant amount of time regardless of the value of the user input that is
 
 #### Trying it out
 Use the above requests but with the `-H 'X-CSRF-Token: XXX` header
+
+### UI
+Create a test user, then naviagte to login `https://localhost:4567/login.html`
