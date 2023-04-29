@@ -23,6 +23,8 @@ public class TokenController {
         var tokenId = tokenStore.create(request, token);
 
         response.status(201);
+        //[csrf] this will now return the SHA-256 hashed version, because that is what the CookieTokenStore returns
+        //this has an added security benefit that the real session ID is now never exposed to JavaScript, even in that response
         return new JSONObject()
                 .put("token", tokenId);
     }
@@ -34,10 +36,11 @@ public class TokenController {
     cookie is present, then extract the username from the session and set it as the subject attribute in the request
      */
     public void validateToken(Request request, Response response) {
-        //Because the CookieTokenStore can determine the token associated with a request by looking at the cookies,
-        //you can leave the tokenId argument null for now when looking up the token in the tokenStore
-        // WARNING: CSRF attack possible
-        tokenStore.read(request, null).ifPresent(token -> {
+        //read the CSRF token from the X-CSRF-Token header.
+        var tokenId = request.headers("X-CSRF-Token");
+        if (tokenId == null) return;
+
+        tokenStore.read(request, tokenId).ifPresent(token -> {
             if (now().isBefore(token.expiry)) {
                 request.attribute("subject", token.username);
                 token.attributes.forEach(request::attribute);

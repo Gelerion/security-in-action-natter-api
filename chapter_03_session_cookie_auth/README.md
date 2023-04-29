@@ -93,6 +93,8 @@ when the browser window or tab is closed. You should avoid adding the Max-Age or
 authentication session cookies so that the user is effectively logged out when they close their browser tab
 
 #### Making requests using a session cookie instead of using HTTP Basic on every request
+reproducable on: `cookie-toknes-branch`
+  
 - create a test user
 ```sh
 curl --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/json' -d '{"username":"test","password":"password"}' https://localhost:4567/users
@@ -120,3 +122,29 @@ CSRF attacks because an attacker cannot guess the random fields and so cannot fo
 > so this is an effective defense against CSRF attacks
 
 ![csrf-protection](images/csrf_protection.png)
+
+This traditional solution has some problems, because although it is not possible to read the value of the second cookie 
+from another origin, there are several ways that the cookie could be overwritten by the attacker with a known value, 
+which would then let them forge requests. 
+
+Rather than generating a second random cookie, you will run the original session cookie through a cryptographically 
+secure hash function to generate the second token. This ensures that any attempt to change either the anti-CSRF token 
+or the session cookie will be detected because the hash of the session cookie will no longer match the token. Because 
+the attacker cannot read the session cookie, they are unable to compute the correct hash value.
+
+#### Timing attacks
+A timing attack works by measuring tiny differences in the time it takes a computer to process different inputs to 
+work out some information about a secret value that the attacker does not know.
+
+Consider what would happen if you used the normal String equals method to compare the hash of the session ID with the 
+anti-CSRF token received in a header. In most programming languages, including Java, string equality is implemented 
+with a loop that terminates as soon as the first non-matching character is found. This means that the code takes very 
+slightly longer to match if the first two characters match than if only a single character matches. A sophisticated 
+attacker can measure even this tiny difference in timing. They can then simply keep sending guesses for 
+the anti-CSRF token.
+
+The solution to such timing attacks is to ensure that all code that performs comparisons or lookups using secret values 
+take a constant amount of time regardless of the value of the user input that is supplied. (e.g. `MessageDigest.isEqual`)
+
+#### Trying it out
+Use the above requests but with the `-H 'X-CSRF-Token: XXX` header
