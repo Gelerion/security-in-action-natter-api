@@ -5,6 +5,8 @@ function login(username, password) {
 
     fetch(apiUrl + '/sessions', {
         method: 'POST',
+        //[cors] Set the credentials field to “include” to allow the API to set cookies on the response
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': credentials

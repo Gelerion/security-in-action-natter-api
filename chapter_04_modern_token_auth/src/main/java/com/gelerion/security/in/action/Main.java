@@ -4,6 +4,7 @@ import com.gelerion.security.in.action.controller.AuditController;
 import com.gelerion.security.in.action.controller.SpaceController;
 import com.gelerion.security.in.action.controller.TokenController;
 import com.gelerion.security.in.action.controller.UserController;
+import com.gelerion.security.in.action.filter.CorsFilter;
 import com.gelerion.security.in.action.token.CookieTokenStore;
 import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
@@ -18,15 +19,18 @@ import spark.Spark;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static spark.Spark.*;
+import static spark.Service.SPARK_DEFAULT_PORT;
 
 public class Main {
 
     public static void main(String... args) throws Exception {
         //[web] serve your HTML and JavaScript files
         Spark.staticFiles.location("/public");
+        port(args.length > 0 ? Integer.parseInt(args[0]) : SPARK_DEFAULT_PORT);
 
         //[tls] enable HTTPS support in Spark by adding a call to the secure() static method.
         //The first two arguments to the method give the name of the keystore file containing
@@ -56,6 +60,10 @@ public class Main {
                 halt(429);
             }
         });
+
+        //[cors] CORS preflight requests should be handled before your API requests authentication because credentials
+        // are never sent on a preflight request
+        before(new CorsFilter(Set.of("https://localhost:9999")));
 
         //[preventing XSS] validate content-type
         before(((request, response) -> {
