@@ -64,7 +64,12 @@ descriptions for HTTP requests that can be used.
   - Token-based authentication
   - Using session cookies
   - Preventing cross-site request forgery attacks
-
+- [4 - Moder token-based authentication](chapter_04_modern_token_auth)
+  - Supporting cross-domain web clients with CORS
+  - Storing tokens using the Web Storage API
+  - The standard Bearer HTTP authentication scheme for tokens
+  - Hardening database token storage
+    
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
 the authoritative baseline for a secure web application. Produced by the Open Web Application Security Project (OWASP) 
