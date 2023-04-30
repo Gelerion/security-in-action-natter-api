@@ -5,7 +5,7 @@ import com.gelerion.security.in.action.controller.SpaceController;
 import com.gelerion.security.in.action.controller.TokenController;
 import com.gelerion.security.in.action.controller.UserController;
 import com.gelerion.security.in.action.filter.CorsFilter;
-import com.gelerion.security.in.action.token.CookieTokenStore;
+import com.gelerion.security.in.action.token.DatabaseTokenStore;
 import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
 import org.dalesbred.Database;
@@ -22,8 +22,8 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static spark.Spark.*;
 import static spark.Service.SPARK_DEFAULT_PORT;
+import static spark.Spark.*;
 
 public class Main {
 
@@ -50,7 +50,7 @@ public class Main {
         var spaceController = new SpaceController(database);
         var userController = new UserController(database);
         var auditController = new AuditController(database);
-        TokenStore tokenStore = new CookieTokenStore();
+        TokenStore tokenStore = new DatabaseTokenStore(database);
         var tokenController = new TokenController(tokenStore);
 
         //[rate-limiting] allow just 2 API requests per second
