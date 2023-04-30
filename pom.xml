@@ -13,6 +13,7 @@
     <module>chapter_01_natter_api</module>
     <module>chapter_02_securing_api</module>
     <module>chapter_03_session_cookie_auth</module>
+    <module>chapter_04_modern_token_auth</module>
   </modules>
 
   <properties>
