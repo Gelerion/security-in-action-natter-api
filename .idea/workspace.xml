@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BspLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="$USER_HOME$/Intuit/data-curation/data-quality/data-quality-commons" value="PREVIEW" />
+        <entry key="$USER_HOME$/Intuit/data-curation/data-quality/data-quality-rest-api" value="PREVIEW" />
+        <entry key="$USER_HOME$/Intuit/data-curation/data-quality/play-commons" value="PREVIEW" />
+        <entry key="$USER_HOME$/Intuit/personal/play-scala/play-scala-seed" value="PREVIEW" />
+        <entry key="$USER_HOME$/Intuit/personal/sql-lineage" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../streaming/sessionizing" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9ea13da0-1562-4b65-9b02-c085404e5a17" name="Changes" comment="chapter - 4 - modern token-auth -- cors with cookies">
+      <change afterPath="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/java/com/gelerion/security/in/action/token/DatabaseTokenStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chapter_04_modern_token_auth/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/chapter_04_modern_token_auth/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/java/com/gelerion/security/in/action/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/java/com/gelerion/security/in/action/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/resources/schema.sql" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTTP Request" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="cors_with_cookies" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/chapter_02_securing_api/src/main/java/com/gelerion/security/in/action/Main.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file:///private/var/folders/ll/0m6x1lf976l67blmp_v5tll40000gn/T/whats-new.http.http" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="HttpClientSelectedEnvironments">
+    <file url="jar://$APPLICATION_HOME_DIR$/plugins/restClient/lib/restClient.jar!/com/intellij/ws/rest/client/requests/collection/get-requests.http" environment="test" />
+    <file url="jar://$APPLICATION_HOME_DIR$/plugins/restClient/lib/restClient.jar!/com/intellij/ws/rest/client/requests/collection/post-requests.http" environment="test" />
+    <file url="jar://$APPLICATION_HOME_DIR$/plugins/restClient/lib/restClient.jar!/com/intellij/ws/rest/client/requests/collection/requests-with-tests.http" environment="test" />
+  </component>
+  <component name="KubernetesApiPersistence">
+    <option name="context" value="minikube" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2OaVeQPBa1TTqrn9Amp2fSuCn1G" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "jdk.selected.JAVA_MODULE": "11",
+    "last_opened_file_path": "/Users/dshuvalov/Projects/personal/security-in-action-natter-api/chapter_04_modern_token_auth",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.importing"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/chapter_04_modern_token_auth" />
+      <recent name="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/resources" />
+      <recent name="$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/java/com/gelerion/security/in/action" />
+      <recent name="$PROJECT_DIR$/chapter_03_session_cookie_auth" />
+      <recent name="$PROJECT_DIR$/chapter_03_session_cookie_auth/src/main/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/chapter_03_session_cookie_auth/images" />
+      <recent name="$PROJECT_DIR$/chapter_03_session_cookie_auth/src/main/resources" />
+      <recent name="$PROJECT_DIR$/chapter_02_securing_api" />
+      <recent name="$PROJECT_DIR$/chapter_02_securing_api/images" />
+      <recent name="$PROJECT_DIR$/chapter_02_securing_api/src" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean compile exec:java " />
+      <command value="mvn:chapter_02_securing_api clean compile exec:java " />
+      <command value="mvn clean" />
+      <command value="mvn compile" />
+      <command value="mvn clean compile exec:java -pl chapter_01_natter_api" />
+      <command value="mvn mvn clean compile exec:java -pl chapter_02_securing_api" />
+      <command value="mvn clean compile exec:java -pl chapter_02_securing_api" />
+      <command value="mvn clean compile exec:java -pl chapter_03_session_cookie_auth" />
+      <command value="mvn clean compile exec:java -Dexec.args=9999 -pl chapter_04_modern_token_auth" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.gelerion.security.in.action.Main" />
+      <module name="chapter_04_modern_token_auth" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.gelerion.security.in.action.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="security-in-action-natter-api" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="security-in-action-natter-api" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="OPA_TEST_RUN_CONFIGURATION" factoryName="Opa configuration factory">
+      <option name="additionalargs" value="" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9ea13da0-1562-4b65-9b02-c085404e5a17" name="Changes" comment="" />
+      <created>1681798776174</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681798776174</updated>
+      <workItem from="1681798779060" duration="1411000" />
+      <workItem from="1681886950475" duration="1790000" />
+      <workItem from="1681890214162" duration="5202000" />
+      <workItem from="1681968676126" duration="22252000" />
+      <workItem from="1682315868510" duration="3910000" />
+      <workItem from="1682575472344" duration="4936000" />
+      <workItem from="1682665493427" duration="10761000" />
+      <workItem from="1682758501121" duration="5194000" />
+      <workItem from="1682834171774" duration="9381000" />
+    </task>
+    <task id="LOCAL-00001" summary="natter-api - starting point">
+      <created>1681893404857</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1681893404857</updated>
+    </task>
+    <task id="LOCAL-00002" summary="trying it out">
+      <created>1681895223512</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1681895223512</updated>
+    </task>
+    <task id="LOCAL-00003" summary="The OWASP top 10 vulnerabilities">
+      <created>1681969522936</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681969522936</updated>
+    </task>
+    <task id="LOCAL-00004" summary="code reformat">
+      <created>1681969537734</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1681969537734</updated>
+    </task>
+    <task id="LOCAL-00005" summary="sql injection">
+      <created>1681970920632</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681970920632</updated>
+    </task>
+    <task id="LOCAL-00006" summary="sql injection">
+      <created>1681970941837</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1681970941837</updated>
+    </task>
+    <task id="LOCAL-00007" summary="java serialization">
+      <created>1681971304027</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1681971304027</updated>
+    </task>
+    <task id="LOCAL-00008" summary="typo">
+      <created>1681971787508</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1681971787508</updated>
+    </task>
+    <task id="LOCAL-00009" summary="XSS example">
+      <created>1681972334263</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1681972334263</updated>
+    </task>
+    <task id="LOCAL-00010" summary="protecting against XSS attacks">
+      <created>1681972858025</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1681972858025</updated>
+    </task>
+    <task id="LOCAL-00011" summary="chapter - 1 - readme updated">
+      <created>1682068367724</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1682068367724</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor parent pom &amp; add chapter - 2">
+      <created>1682072198806</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1682072198806</updated>
+    </task>
+    <task id="LOCAL-00013" summary="requests">
+      <created>1682072293751</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1682072293751</updated>
+    </task>
+    <task id="LOCAL-00014" summary="chapter - 2 - overview">
+      <created>1682074158117</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1682074158117</updated>
+    </task>
+    <task id="LOCAL-00015" summary="chapter - 2 - rate limiting">
+      <created>1682075169006</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1682075169006</updated>
+    </task>
+    <task id="LOCAL-00016" summary="chapter - 2 - authentication - register users">
+      <created>1682167388827</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1682167388827</updated>
+    </task>
+    <task id="LOCAL-00017" summary="chapter - 2 - authentication - authenticated requests">
+      <created>1682169224864</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682169224864</updated>
+    </task>
+    <task id="LOCAL-00018" summary="chapter - 2 - TLS #1">
+      <created>1682171806566</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1682171806566</updated>
+    </task>
+    <task id="LOCAL-00019" summary="chapter - 2 - TLS #1">
+      <created>1682171820750</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1682171820750</updated>
+    </task>
+    <task id="LOCAL-00020" summary="chapter - 2 - TLS #2">
+      <created>1682231893357</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1682231893357</updated>
+    </task>
+    <task id="LOCAL-00021" summary="chapter - 2 - Audit Log">
+      <created>1682233128489</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1682233128489</updated>
+    </task>
+    <task id="LOCAL-00022" summary="chapter - 2 - access control -- enforce authentication">
+      <created>1682316615396</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1682316615396</updated>
+    </task>
+    <task id="LOCAL-00023" summary="chapter - 2 - access control -- acl">
+      <created>1682318241818</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1682318241818</updated>
+    </task>
+    <task id="LOCAL-00024" summary="chapter - 2 - access control -- privilege escalation attacks">
+      <created>1682319084382</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1682319084382</updated>
+    </task>
+    <task id="LOCAL-00025" summary="chapter - 3 - session tokens -- baseline">
+      <created>1682576422622</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1682576422622</updated>
+    </task>
+    <task id="LOCAL-00026" summary="chapter - 3 - session tokens -- update readme">
+      <created>1682576661622</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1682576661622</updated>
+    </task>
+    <task id="LOCAL-00027" summary="chapter - 3 - session tokens -- basic auth from a browser">
+      <created>1682579770149</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1682579770150</updated>
+    </task>
+    <task id="LOCAL-00028" summary="chapter - 3 - session tokens -- cookie-based token auth #1">
+      <created>1682672735094</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1682672735094</updated>
+    </task>
+    <task id="LOCAL-00029" summary="chapter - 3 - session tokens -- persistent cookies">
+      <created>1682673324035</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1682673324035</updated>
+    </task>
+    <task id="LOCAL-00030" summary="chapter - 3 - session tokens -- CSRF #1">
+      <created>1682677201831</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1682677201831</updated>
+    </task>
+    <task id="LOCAL-00031" summary="chapter - 3 - session tokens -- CSRF dobule-submit cookie">
+      <created>1682762695997</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1682762695997</updated>
+    </task>
+    <task id="LOCAL-00032" summary="chapter - 3 - session tokens -- UI + logout">
+      <created>1682763768311</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1682763768311</updated>
+    </task>
+    <task id="LOCAL-00033" summary="chapter - 4 - modern token-autg -- init">
+      <created>1682864959014</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1682864959014</updated>
+    </task>
+    <task id="LOCAL-00034" summary="chapter - 4 - modern token-autg -- init">
+      <created>1682865036975</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1682865036975</updated>
+    </task>
+    <task id="LOCAL-00035" summary="chapter - 4 - modern token-auth -- cors with cookies">
+      <created>1682867517534</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1682867517534</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="XSS example" />
+    <MESSAGE value="protecting against XSS attacks" />
+    <MESSAGE value="chapter - 1 - readme updated" />
+    <MESSAGE value="refactor parent pom &amp; add chapter - 2" />
+    <MESSAGE value="requests" />
+    <MESSAGE value="chapter - 2 - overview" />
+    <MESSAGE value="chapter - 2 - rate limiting" />
+    <MESSAGE value="chapter - 2 - authentication - register users" />
+    <MESSAGE value="chapter - 2 - authentication - authenticated requests" />
+    <MESSAGE value="chapter - 2 - TLS #1" />
+    <MESSAGE value="chapter - 2 - TLS #2" />
+    <MESSAGE value="chapter - 2 - Audit Log" />
+    <MESSAGE value="chapter - 2 - access control -- enforce authentication" />
+    <MESSAGE value="chapter - 2 - access control -- acl" />
+    <MESSAGE value="chapter - 2 - access control -- privilege escalation attacks" />
+    <MESSAGE value="chapter - 3 - session tokens -- baseline" />
+    <MESSAGE value="chapter - 3 - session tokens -- update readme" />
+    <MESSAGE value="chapter - 3 - session tokens -- basic auth from a browser" />
+    <MESSAGE value="chapter - 3 - session tokens -- cookie-based token auth #1" />
+    <MESSAGE value="chapter - 3 - session tokens -- persistent cookies" />
+    <MESSAGE value="chapter - 3 - session tokens -- CSRF #1" />
+    <MESSAGE value="chapter - 3 - session tokens -- CSRF dobule-submit cookie" />
+    <MESSAGE value="chapter - 3 - session tokens -- UI + logout" />
+    <MESSAGE value="chapter - 4 - modern token-autg -- init" />
+    <MESSAGE value="chapter - 4 - modern token-auth -- cors with cookies" />
+    <option name="LAST_COMMIT_MESSAGE" value="chapter - 4 - modern token-auth -- cors with cookies" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/chapter_04_modern_token_auth/src/main/java/com/gelerion/security/in/action/filter/CorsFilter.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

@@ -87,4 +87,4 @@ curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/js
 ```sh
 curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -u test:password -H 'Content-Type: application/json' -X POST https://localhost:4567/sessions
 ```
-Note the lack of a `Set-Cookie` header in the response. There is just the new token in the JSON body. 
+Note the lack of a `Set-Cookie` header in the response. There is just the new token in the JSON body.  
