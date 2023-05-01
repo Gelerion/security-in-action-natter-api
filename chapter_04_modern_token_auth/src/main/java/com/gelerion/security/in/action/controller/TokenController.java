@@ -30,29 +30,31 @@ public class TokenController {
                 .put("token", tokenId);
     }
 
-    /*
-    The existing HTTP Basic authentication filter populates the subject attribute on the request if valid
-    credentials are found, and later access control filters check for the presence of this subject attribute.
-    You can allow requests with a session cookie to proceed by implementing the same contract: if a valid session
-    cookie is present, then extract the username from the session and set it as the subject attribute in the request
-     */
     public void validateToken(Request request, Response response) {
-        //read the CSRF token from the X-CSRF-Token header.
-        var tokenId = request.headers("X-CSRF-Token");
-        if (tokenId == null) return;
+        var tokenId = request.headers("Authorization");
+        if (tokenId == null || !tokenId.startsWith("Bearer ")) {
+            return;
+        }
+        tokenId = tokenId.substring(7);
 
         tokenStore.read(request, tokenId).ifPresent(token -> {
             if (now().isBefore(token.expiry)) {
                 request.attribute("subject", token.username);
                 token.attributes.forEach(request::attribute);
+            } else {
+                response.header("WWW-Authenticate",
+                        "Bearer error=\"invalid_token\"," +
+                              "error_description=\"Expired\"");
             }
         });
     }
 
     public JSONObject logout(Request request, Response response) {
-        var tokenId = request.headers("X-CSRF-Token");
-        if (tokenId == null)
+        var tokenId = request.headers("Authorization");
+        if (tokenId == null || !tokenId.startsWith("Bearer ")) {
             throw new IllegalArgumentException("missing token header");
+        }
+        tokenId = tokenId.substring(7);
 
         tokenStore.revoke(request, tokenId);
 

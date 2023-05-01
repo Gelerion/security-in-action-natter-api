@@ -19,9 +19,6 @@ public class CorsFilter implements Filter {
         var origin = request.headers("Origin");
         if (origin != null && allowedOrigins.contains(origin)) {
             response.header("Access-Control-Allow-Origin", origin);
-            //Browsers will also ignore any Set-Cookie headers in the response to a CORS request unless
-            // the response contains Access-Control-Allow-Credentials: true
-            response.header("Access-Control-Allow-Credentials", "true");
             //[cors] include a Vary: Origin header to ensure the browser and any network proxies only cache
             // the response for this specific requesting origin
             response.header("Vary", "Origin");

@@ -50,7 +50,7 @@ public class Main {
         var spaceController = new SpaceController(database);
         var userController = new UserController(database);
         var auditController = new AuditController(database);
-        TokenStore tokenStore = new DatabaseTokenStore(database);
+        DatabaseTokenStore tokenStore = new DatabaseTokenStore(database);
         var tokenController = new TokenController(tokenStore);
 
         //[rate-limiting] allow just 2 API requests per second
@@ -133,6 +133,11 @@ public class Main {
         post("/users", userController::registerUser);
         //[audit]
         get("/logs", auditController::readAuditLog);
+        before("/expired_tokens", userController::requireAuthentication);
+        delete("/expired_tokens", (request, response) -> {
+            tokenStore.deleteExpiredTokens();
+            return new JSONObject();
+        });
 
         internalServerError(new JSONObject().put("error", "internal server error").toString());
         notFound(new JSONObject().put("error", "not found").toString());

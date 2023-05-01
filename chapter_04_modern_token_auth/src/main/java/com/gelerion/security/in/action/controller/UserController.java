@@ -108,6 +108,7 @@ public class UserController {
         if (request.attribute("subject") == null) {
             //for custom login form -- stop the browser popping up the ugly default login box
             //response.header("WWW-Authenticate", "Basic realm=\"/\", charset=\"UTF-8\"");
+            response.header("WWW-Authenticate", "Bearer");
             halt(401);
         }
     }

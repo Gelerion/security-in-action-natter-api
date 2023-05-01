@@ -3,6 +3,8 @@ package com.gelerion.security.in.action.token;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.dalesbred.Database;
 import org.json.JSONObject;
@@ -22,10 +24,13 @@ public class DatabaseTokenStore implements TokenStore {
         //To ensure that Java uses the non-blocking /dev/urandom device for seeding the SecureRandom class,
         // pass the option -Djava.security.egd=file: /dev/urandom to the JVM
         this.secureRandom = new SecureRandom();
+
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(this::deleteExpiredTokens,10, 10, TimeUnit.MINUTES);
     }
 
     private String randomId() {
-        //[tokens] we'ill use 160-bit token IDs
+        //[tokens] we'll use 160-bit token IDs
         var bytes = new byte[20];
         secureRandom.nextBytes(bytes);
         return Base64url.encode(bytes);
@@ -70,5 +75,10 @@ public class DatabaseTokenStore implements TokenStore {
             token.attributes.put(key, json.getString(key));
         }
         return token;
+    }
+
+    public void deleteExpiredTokens() {
+        var deleted = database.update("DELETE FROM tokens WHERE expiry < current_timestamp");
+        logger.info("Deleted {} expired tokens", deleted);
     }
 }

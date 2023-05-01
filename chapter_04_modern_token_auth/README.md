@@ -32,7 +32,7 @@ mvn clean compile exec:java
 ```
 Now start a second copy of the Natter UI by running the following command:
 ```sh
-mvn clean compile exec:java -Dexec.args=9999
+mvn clean compile exec:java -Dexec.args=9999 -pl "chapter_04_modern_token_auth"
 ```
 
 ## Tokens without cookies
@@ -87,4 +87,46 @@ curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/js
 ```sh
 curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -u test:password -H 'Content-Type: application/json' -X POST https://localhost:4567/sessions
 ```
-Note the lack of a `Set-Cookie` header in the response. There is just the new token in the JSON body. 
+Note the lack of a `Set-Cookie` header in the response. There is just the new token in the JSON body.
+
+### The Bearer authentication scheme
+Passing the token in a `X-CSRF-Token` header is less than ideal for tokens that have nothing to do 
+with CSRF. You could just rename the header, and that would be perfectly acceptable. 
+However, a standard way to pass non-cookie-based tokens to an API exists in the form of the `Bearer`
+token scheme for HTTP authentication defined by RFC [6750](https://tools.ietf.org/html/rfc6750). 
+While originally designed for OAuth2 usage, the scheme has been widely adopted as a general mechanism 
+for API token-based authentication.
+  
+> **_NOTE_** Any client that has a valid token is authorized to use that token and does not need to 
+> supply any further proof of authentication. A bearer token can be given to a third party to grant them 
+> access without revealing user credentials but can also be used easily by attackers if stolen.  
+
+To send a token to an API using the Bearer scheme, you simply include it in an Authorization header:
+```
+Authorization: Bearer QDAmQ9TStkDCpVK5A9kFowtYn2k
+```
+The standard also describes how to issue a `WWW-Authenticate` challenge header for bearer tokens, which allows our API 
+to become compliant with the HTTP specifications. The challenge can include a realm parameter  if the API requires 
+different tokens for different endpoints. For example, you might return `realm="users"` from one endpoint
+and `realm="admins"` from another, to indicate to the client that they should obtain a token from a 
+different login endpoint for administrators compared to regular users
+```
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="users", error="invalid_token", error_description="Token has expired"
+```
+
+### Storing tokens in Web Storage
+Until the release of HTML 5, there were very few alternatives to cookies for storing tokens 
+in a web browser client. Now there are two widely-supported alternatives:
+- The Web Storage API that includes the `localStorage` and `sessionStorage` objects for storing simple key-value pairs.
+- The IndexedDB API that allows storing larger amounts of data in a more sophisticated JSON NoSQL database.
+
+![Bearer auth](images/bearer_auth.png)
+
+- The `sessionStorage` object can be used to store data until the browser window or tab is closed.
+- The `localStorage` object stores data until it is explicitly deleted, saving the data even over browser restarts.
+  
+Although similar to session cookies, sessionStorage is not shared between browser tabs or windows; 
+each tab gets its own storage. Although this can be useful, if you use sessionStorage to store 
+authentication tokens then the user will be forced to login again every time they open a new tab and 
+logging out of one tab will not log them out of the others.
