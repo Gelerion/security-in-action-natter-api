@@ -7,7 +7,6 @@ import com.gelerion.security.in.action.controller.UserController;
 import com.gelerion.security.in.action.filter.CorsFilter;
 import com.gelerion.security.in.action.token.DatabaseTokenStore;
 import com.gelerion.security.in.action.token.HmacTokenStore;
-import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
 import org.dalesbred.Database;
 import org.dalesbred.result.EmptyResultException;
