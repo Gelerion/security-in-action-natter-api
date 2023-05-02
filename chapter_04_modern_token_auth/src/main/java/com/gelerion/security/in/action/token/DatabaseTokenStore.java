@@ -55,8 +55,7 @@ public class DatabaseTokenStore implements TokenStore {
 
     @Override
     public void revoke(Request request, String tokenId) {
-        database.update("DELETE FROM tokens WHERE token_id = ?",
-                hash(tokenId));
+        database.update("DELETE FROM tokens WHERE token_id = ?", hash(tokenId));
     }
 
     private String hash(String tokenId) {

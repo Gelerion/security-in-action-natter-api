@@ -130,3 +130,55 @@ Although similar to session cookies, sessionStorage is not shared between browse
 each tab gets its own storage. Although this can be useful, if you use sessionStorage to store 
 authentication tokens then the user will be forced to login again every time they open a new tab and 
 logging out of one tab will not log them out of the others.
+
+### Hardening database token storage
+You should separate the database server from the API and ensure that the database is not directly 
+accessible by external clients. Communication between the database and the API should be secured 
+with TLS.
+  
+#### Hashing database tokens
+Authentication tokens are credentials that allow access to a user’s account, just like a password. 
+In chapter 3, you learned to hash passwords to protect them in case the user database is ever 
+compromised. You should do the same for authentication tokens, for the same reason. If an attacker 
+ever compromises the token database, they can immediately use all the login tokens for any user that 
+is currently logged in. Unlike user passwords, authentication tokens have high entropy, so you 
+don’t need to use an expensive password hashing algorithm like Scrypt. Instead, you can use a fast, 
+cryptographic hash function such as SHA-256
+
+#### Authenticating tokens with HMAC
+Although effective against token theft, simple hashing does not prevent an attacker with write access 
+from inserting a fake token that gives them access to another user’s account. Most databases are also 
+not designed to provide constant-time equality comparisons, so database lookups can be vulnerable to 
+timing attacks. You can eliminate both issues by calculating a message authentication code (MAC), 
+such as the standard hash-based MAC (HMAC). HMAC works like a normal cryptographic hash function, 
+but incorporates a secret key known only to the API server.
+
+![HMAC](images/hmac.png)
+> **_DEFINITION_** A message authentication code (MAC) is an algorithm for computing a short 
+> fixed-length authentication tag from a message and a secret key. A user with the same secret 
+> key will be able to compute the same tag from the same message, but any change in the message 
+> will result in a completely different tag.   
+
+#### Generating the key
+The key used for HMAC-SHA256 is just a 32-byte random value, so you could generate one using a 
+`SecureRandom` just like you currently do for database token IDs. But many APIs will be implemented 
+using more than one server to handle load from large numbers of clients, and requests from the same 
+client may be routed to any server, so they all need to use the same key. Otherwise, a token generated 
+on one server will be rejected as invalid by a different server with a different key. Even if you have 
+only a single server, if you ever restart it, then it will reject tokens issued before it restarted 
+unless the key is the same. To get around these problems, you can store the key in an external 
+`keystore` that can be loaded by each server.
+
+> **_DEFINITION_** A keystore is an encrypted file that contains cryptographic keys and TLS certificates 
+> used by your API. A keystore is usually protected by a password.
+
+Java supports loading keys from keystores using the `java.security.KeyStore` class, and you can create a keystore 
+using the keytool command shipped with the JDK. Java provides several keystore formats, but you should use 
+the [PKCS #12](https:// tools.ietf.org/html/rfc7292) format because that is the most secure option supported by keytool
+  
+```sh
+keytool -genseckey -keyalg HmacSHA256 -keysize 256 \
+  -alias hmac-key -keystore keystore.p12 \
+  -storetype PKCS12 \
+  -storepass changeit 
+```

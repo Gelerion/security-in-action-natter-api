@@ -6,6 +6,7 @@ import com.gelerion.security.in.action.controller.TokenController;
 import com.gelerion.security.in.action.controller.UserController;
 import com.gelerion.security.in.action.filter.CorsFilter;
 import com.gelerion.security.in.action.token.DatabaseTokenStore;
+import com.gelerion.security.in.action.token.HmacTokenStore;
 import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
 import org.dalesbred.Database;
@@ -17,8 +18,10 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyStore;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -27,6 +30,7 @@ import static spark.Spark.*;
 
 public class Main {
 
+    @SuppressWarnings("all")
     public static void main(String... args) throws Exception {
         //[web] serve your HTML and JavaScript files
         Spark.staticFiles.location("/public");
@@ -50,7 +54,15 @@ public class Main {
         var spaceController = new SpaceController(database);
         var userController = new UserController(database);
         var auditController = new AuditController(database);
-        DatabaseTokenStore tokenStore = new DatabaseTokenStore(database);
+
+        //[hmac]
+        var keyPassword = System.getProperty("keystore.password", "changeit").toCharArray();
+        var keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(new FileInputStream("chapter_04_modern_token_auth/keystore.p12"), keyPassword);
+        var macKey = keyStore.getKey("hmac-key", keyPassword);
+
+        DatabaseTokenStore databaseTokenStore = new DatabaseTokenStore(database);
+        var tokenStore = new HmacTokenStore(databaseTokenStore, macKey);
         var tokenController = new TokenController(tokenStore);
 
         //[rate-limiting] allow just 2 API requests per second
@@ -82,6 +94,7 @@ public class Main {
             response.header("X-Frame-Options", "DENY");
             response.header("X-XSS-Protection", "0");
             response.header("Cache-Control", "no-store");
+            //[xss] https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
             response.header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox");
         });
 
@@ -135,7 +148,7 @@ public class Main {
         get("/logs", auditController::readAuditLog);
         before("/expired_tokens", userController::requireAuthentication);
         delete("/expired_tokens", (request, response) -> {
-            tokenStore.deleteExpiredTokens();
+            databaseTokenStore.deleteExpiredTokens();
             return new JSONObject();
         });
 
