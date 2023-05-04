@@ -69,6 +69,11 @@ descriptions for HTTP requests that can be used.
   - Storing tokens using the Web Storage API
   - The standard Bearer HTTP authentication scheme for tokens
   - Hardening database token storage
+- [5 - Self-contained tokens and JWTs](chapter_05_self_contained_tokens)
+  - Scaling token-based authentication with encrypted client-side storage
+  - Protecting tokens with MACs and authenticated encryption
+  - Generating standard JSON Web Tokens
+  - Handling token revocation when all the state is on the client
     
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
