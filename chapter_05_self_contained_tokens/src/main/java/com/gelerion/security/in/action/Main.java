@@ -7,7 +7,12 @@ import com.gelerion.security.in.action.controller.UserController;
 import com.gelerion.security.in.action.filter.CorsFilter;
 import com.gelerion.security.in.action.token.DatabaseTokenStore;
 import com.gelerion.security.in.action.token.HmacTokenStore;
+import com.gelerion.security.in.action.token.SignedJwtTokenStore;
+import com.gelerion.security.in.action.token.TokenStore;
 import com.google.common.util.concurrent.RateLimiter;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import org.dalesbred.Database;
 import org.dalesbred.result.EmptyResultException;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -17,6 +22,7 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
+import javax.crypto.SecretKey;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -60,9 +66,16 @@ public class Main {
         keyStore.load(new FileInputStream("chapter_05_self_contained_tokens/keystore.p12"), keyPassword);
         var macKey = keyStore.getKey("hmac-key", keyPassword);
 
-        DatabaseTokenStore databaseTokenStore = new DatabaseTokenStore(database);
-        var tokenStore = new HmacTokenStore(databaseTokenStore, macKey);
+        //[jwt] basic
+        var algorithm = JWSAlgorithm.HS256;
+        var signer = new MACSigner((SecretKey) macKey);
+        var verifier = new MACVerifier((SecretKey) macKey);
+        var tokenStore = new SignedJwtTokenStore(signer, verifier, algorithm, "https://localhost:4567");
         var tokenController = new TokenController(tokenStore);
+
+//        DatabaseTokenStore databaseTokenStore = new DatabaseTokenStore(database);
+//        var tokenStore = new HmacTokenStore(databaseTokenStore, macKey);
+//        var tokenController = new TokenController(tokenStore);
 
         //[rate-limiting] allow just 2 API requests per second
         var rateLimiter = RateLimiter.create(2.0d);
@@ -146,10 +159,10 @@ public class Main {
         //[audit]
         get("/logs", auditController::readAuditLog);
         before("/expired_tokens", userController::requireAuthentication);
-        delete("/expired_tokens", (request, response) -> {
-            databaseTokenStore.deleteExpiredTokens();
-            return new JSONObject();
-        });
+//        delete("/expired_tokens", (request, response) -> {
+//            databaseTokenStore.deleteExpiredTokens();
+//            return new JSONObject();
+//        });
 
         internalServerError(new JSONObject().put("error", "internal server error").toString());
         notFound(new JSONObject().put("error", "not found").toString());
