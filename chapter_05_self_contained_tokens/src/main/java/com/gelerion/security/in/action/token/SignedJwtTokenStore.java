@@ -66,11 +66,18 @@ public class SignedJwtTokenStore implements TokenStore {
     @Override
     public Optional<Token> read(Request request, String tokenId) {
         try {
+            //[jwt] first parse the JWS Compact Serialization format
             var jwt = SignedJWT.parse(tokenId);
+            //[jwt] use the JWSVerifier object to verify the signature
+            // The Nimbus MACVerifier will calculate the correct HMAC tag and then compare it to the tag attached
+            // to the JWT using a constant-time equality comparison, just like you did in the HmacTokenStore
+            // The Nimbus library also takes care of basic security checks, such as making sure that the algorithm
+            // header is compatible with the verifier, and that there are no unrecognized critical headers.
             if (!jwt.verify(verifier)) {
                 throw new JOSEException("Invalid signature");
             }
 
+            //[jwt] reject the token if the audience doesn't contain your API’s base URI
             var claims = jwt.getJWTClaimsSet();
             if (!claims.getAudience().contains(audience)) {
                 throw new JOSEException("Incorrect audience");

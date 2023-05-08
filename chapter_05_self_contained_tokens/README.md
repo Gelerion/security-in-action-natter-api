@@ -102,3 +102,10 @@ curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Content-Type: application/js
 ```sh
 curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -u test:password -H 'Content-Type: application/json' -X POST https://localhost:4567/sessions
 ```
+- use token to create spaces
+```sh
+curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Authorization: Bearer {TOKEN}' -H 'Content-Type: application/json' -d '{"owner":"test","name":"test space"}' https://localhost:4567/spaces
+```
+  
+You can take the token we get in the response and paste it into the debugger at https://jwt.io to validate it and see 
+the contents of the header and claim
