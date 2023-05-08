@@ -143,3 +143,6 @@ see: [EncryptedTokenStore.java](src/main/java/com/gelerion/security/in/action/to
 ```sh
 keytool -genseckey -keyalg AES -keysize 256 -alias aes-key -keystore keystore.p12 -storepass changeit
 ```
+
+### More on the best practice design
+https://learning.oreilly.com/library/view/api-security-in/9781617296024/OEBPS/Text/06.htm#heading_id_15
