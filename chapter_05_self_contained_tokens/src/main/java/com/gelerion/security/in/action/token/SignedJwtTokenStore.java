@@ -1,12 +1,13 @@
 package com.gelerion.security.in.action.token;
 
-import javax.crypto.SecretKey;
-import java.text.ParseException;
-import java.util.*;
-
 import com.nimbusds.jose.*;
-import com.nimbusds.jwt.*;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import spark.Request;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * The Nimbus library requires a <b>JWSSigner</b> object for generating signatures, and a <b>JWSVerifier</b> for verifying them.

@@ -9,6 +9,7 @@ import com.gelerion.security.in.action.token.DatabaseTokenStore;
 import com.gelerion.security.in.action.token.HmacTokenStore;
 import com.gelerion.security.in.action.token.SignedJwtTokenStore;
 import com.gelerion.security.in.action.token.TokenStore;
+import com.gelerion.security.in.action.token.encrypted.EncryptedJwtTokenStore;
 import com.google.common.util.concurrent.RateLimiter;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -64,13 +65,16 @@ public class Main {
         var keyPassword = System.getProperty("keystore.password", "changeit").toCharArray();
         var keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(new FileInputStream("chapter_05_self_contained_tokens/keystore.p12"), keyPassword);
+
         var macKey = keyStore.getKey("hmac-key", keyPassword);
+        var encKey = keyStore.getKey("aes-key", keyPassword);
 
         //[jwt] basic
         var algorithm = JWSAlgorithm.HS256;
         var signer = new MACSigner((SecretKey) macKey);
         var verifier = new MACVerifier((SecretKey) macKey);
-        var tokenStore = new SignedJwtTokenStore(signer, verifier, algorithm, "https://localhost:4567");
+        //var tokenStore = new SignedJwtTokenStore(signer, verifier, algorithm, "https://localhost:4567");
+        var tokenStore = new EncryptedJwtTokenStore((SecretKey) encKey);
         var tokenController = new TokenController(tokenStore);
 
 //        DatabaseTokenStore databaseTokenStore = new DatabaseTokenStore(database);

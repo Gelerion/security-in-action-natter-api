@@ -59,6 +59,11 @@
             <version>9.31</version>
         </dependency>
         <dependency>
+            <groupId>software.pando.crypto</groupId>
+            <artifactId>salty-coffee</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>

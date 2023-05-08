@@ -109,3 +109,37 @@ curl -i --cacert "$(mkcert -CAROOT)/rootCA.pem" -H 'Authorization: Bearer {TOKEN
   
 You can take the token we get in the response and paste it into the debugger at https://jwt.io to validate it and see 
 the contents of the header and claim
+
+### Encrypting sensitive attributes
+Once you move away from a database and start storing data on the client, that data is much more vulnerable to snooping. 
+Any personal information about the user included in the token, such as name, date of birth, job role, work location, 
+and so on, may be at risk if the token is accidentally leaked by the client or stolen though a phishing attack or 
+XSS exfiltration.
+
+The goal of encryption is to ensure the confidentiality of a message by converting it into an obscured form, 
+known as the `ciphertext`, using a `secret key`. The recipient can then use the same secret key to recover the original 
+plaintext message. When the sender and recipient both use the same key, this is known as secret key cryptography. 
+There are also public key encryption algorithms in which the sender and recipient have different keys.
+
+Many encryption algorithms only ensure the confidentiality of data that has been encrypted and don’t claim to protect 
+the integrity of that data. This means that an attacker won’t be able to read any sensitive attributes in an encrypted 
+token, but they may be able to alter them. To protect against spoofing and tampering threats, you should always 
+use algorithms that provide authenticated encryption. Authenticated encryption algorithms combine an encryption 
+algorithm for hiding sensitive data with a MAC algorithm, such as HMAC, to ensure that the data can’t be altered or faked.
+  
+#### Authenticated encryption with NaCl
+The most well-known of these is the Networking and Cryptography Library
+```xml
+<dependency>
+  <groupId>software.pando.crypto</groupId>
+  <artifactId>salty-coffee</artifactId>
+  <version>1.1.1</version>
+</dependency>
+```
+
+see: [EncryptedTokenStore.java](src/main/java/com/gelerion/security/in/action/token/encrypted/EncryptedTokenStore.java)
+
+#### Generating encryption key
+```sh
+keytool -genseckey -keyalg AES -keysize 256 -alias aes-key -keystore keystore.p12 -storepass changeit
+```
