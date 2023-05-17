@@ -73,10 +73,6 @@ public class Main {
         var tokenStore = new EncryptedJwtTokenStore((SecretKey) encKey);
         var tokenController = new TokenController(tokenStore);
 
-//        DatabaseTokenStore databaseTokenStore = new DatabaseTokenStore(database);
-//        var tokenStore = new HmacTokenStore(databaseTokenStore, macKey);
-//        var tokenController = new TokenController(tokenStore);
-
         //[rate-limiting] allow just 2 API requests per second
         var rateLimiter = RateLimiter.create(2.0d);
         before((request, response) -> {
@@ -129,6 +125,8 @@ public class Main {
         // rather than have a /login endpoint, we’ll treat session tokens as a resource and treat logging in
         // as creating a new session resource
         before("/sessions", userController::requireAuthentication);
+        //[scoped tokens]
+        before("/sessions", tokenController.requireScope("POST", "full_access"));
         post("/sessions", tokenController::login);
         delete("/sessions", tokenController::logout);
 
@@ -138,16 +136,20 @@ public class Main {
         post("/spaces", spaceController::createSpace);
 
         //[acl]
+        before("/spaces/*/messages", tokenController.requireScope("POST", "post_message"));
         before("/spaces/:spaceId/messages", userController.requirePermission("POST", "w"));
         post("/spaces/:spaceId/messages", spaceController::postMessage);
 
+        before("/spaces/*/messages/*", tokenController.requireScope("GET", "read_message"));
         before("/spaces/:spaceId/messages/*", userController.requirePermission("GET", "r"));
         get("/spaces/:spaceId/messages/:msgId", spaceController::readMessage);
 
+        before("/spaces/*/messages", tokenController.requireScope("GET", "list_messages"));
         before("/spaces/:spaceId/messages", userController.requirePermission("GET", "r"));
         get("/spaces/:spaceId/messages", spaceController::findMessages);
 
         //add members
+        before("/spaces/*/members", tokenController.requireScope("POST", "add_member"));
         //rwd - only space admin can add other users
         //avoiding privilege escalation attacks - occurs when a user with limited permissions can exploit a bug in the
         // system to grant themselves or somebody else more permissions than they have been granted

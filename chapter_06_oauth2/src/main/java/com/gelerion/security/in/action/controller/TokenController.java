@@ -2,14 +2,20 @@ package com.gelerion.security.in.action.controller;
 
 import com.gelerion.security.in.action.token.TokenStore;
 import org.json.JSONObject;
+import spark.Filter;
 import spark.Request;
 import spark.Response;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 import static java.time.Instant.now;
+import static spark.Spark.halt;
 
 public class TokenController {
+    //[scoped tokens]
+    private static final String DEFAULT_SCOPES =
+            "create_space post_message read_message list_messages delete_message add_member";
     private final TokenStore tokenStore;
 
     public TokenController(TokenStore tokenStore) {
@@ -21,6 +27,10 @@ public class TokenController {
         var expiry = now().plus(10, ChronoUnit.MINUTES);
 
         var token = new TokenStore.Token(expiry, subject);
+        //[scoped tokens] add attributes
+        var scope = request.queryParamOrDefault("scope", DEFAULT_SCOPES);
+        token.attributes.put("scope", scope);
+
         var tokenId = tokenStore.create(request, token);
 
         response.status(201);
@@ -60,5 +70,26 @@ public class TokenController {
 
         response.status(200);
         return new JSONObject();
+    }
+
+    //[scoped tokens] verify that the scope of the token matches the required scope for this request, and if it doesn't,
+    // then you should return a 403 Forbidden error.
+    // The Bearer authentication scheme has a dedicated error code insufficient_scope to indicate that the caller needs
+    // a token with a different scope, so you can indicate that in the WWW-Authenticate header
+    public Filter requireScope(String method, String requiredScope) {
+        return (request, response) -> {
+            if (!method.equalsIgnoreCase(request.requestMethod()))
+                return;
+
+            var tokenScope = request.<String>attribute("scope");
+            if (tokenScope == null) return;
+
+            if (!Arrays.asList(tokenScope.split(" ")).contains(requiredScope)) {
+                response.header("WWW-Authenticate",
+                        "Bearer error=\"insufficient_scope\"," +
+                                "scope=\"" + requiredScope + "\"");
+                halt(403);
+            }
+        };
     }
 }
