@@ -15,6 +15,7 @@
     <module>chapter_03_session_cookie_auth</module>
     <module>chapter_04_modern_token_auth</module>
     <module>chapter_05_self_contained_tokens</module>
+    <module>chapter_06_oauth2</module>
   </modules>
 
   <properties>

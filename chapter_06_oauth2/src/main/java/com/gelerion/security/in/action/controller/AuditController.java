@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class AuditController {
+
     private final Database database;
 
     public AuditController(Database database) {

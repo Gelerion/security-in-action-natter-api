@@ -74,6 +74,11 @@ descriptions for HTTP requests that can be used.
   - Protecting tokens with MACs and authenticated encryption
   - Generating standard JSON Web Tokens
   - Handling token revocation when all the state is on the client
+- [6 - OAuth2 and OpenID connect](chapter_05_self_contained_tokens)
+  - Enabling third-party access to your API with scoped tokens
+  - Integrating an OAuth2 Authorization Server for delegated authorization
+  - Validating OAuth2 access tokens with token introspection
+  - Implementing single sign-on with OAuth and OpenID Connect
     
 ## The OWASP Top 10
 The OWASP Top 10 is a listing of the top 10 vulnerabilities found in many web applications and is considered 
