@@ -1,13 +1,14 @@
 package com.gelerion.security.in.action.token.encrypted;
 
 import com.gelerion.security.in.action.token.TokenStore;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+import com.nimbusds.jwt.*;
 import spark.Request;
 
 import javax.crypto.SecretKey;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Due to the relative complexity of producing and consuming encrypted JWTs compared to HMAC, you’ll continue using

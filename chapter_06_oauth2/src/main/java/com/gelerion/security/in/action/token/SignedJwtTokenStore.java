@@ -1,5 +1,6 @@
 package com.gelerion.security.in.action.token;
 
+import com.nimbusds.jose.*;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import spark.Request;

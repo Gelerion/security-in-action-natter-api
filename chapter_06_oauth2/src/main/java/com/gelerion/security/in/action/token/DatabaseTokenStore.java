@@ -1,15 +1,15 @@
 package com.gelerion.security.in.action.token;
 
-import org.dalesbred.Database;
-import org.json.JSONObject;
-import spark.Request;
-
 import java.security.SecureRandom;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import org.dalesbred.Database;
+import org.json.JSONObject;
+import org.slf4j.*;
+import spark.Request;
 
 import static com.gelerion.security.in.action.token.CookieTokenStore.sha256;
 
