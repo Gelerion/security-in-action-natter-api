@@ -74,7 +74,7 @@ descriptions for HTTP requests that can be used.
   - Protecting tokens with MACs and authenticated encryption
   - Generating standard JSON Web Tokens
   - Handling token revocation when all the state is on the client
-- [6 - OAuth2 and OpenID connect](chapter_05_self_contained_tokens)
+- [6 - OAuth2 and OpenID connect](chapter_06_oauth2)
   - Enabling third-party access to your API with scoped tokens
   - Integrating an OAuth2 Authorization Server for delegated authorization
   - Validating OAuth2 access tokens with token introspection
