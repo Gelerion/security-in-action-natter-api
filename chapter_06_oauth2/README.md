@@ -231,3 +231,20 @@ var jwkSet = new RemoteJWKSet(jwkSetUri);
 
 see:
 [SignedJwtAccessTokenStore](src/main/java/com/gelerion/security/in/action/token/SignedJwtAccessTokenStore.java)
+
+### Single sign-on
+One of the advantages of OAuth2 is the ability to centralize authentication of users at the AS, providing a 
+single sign-on (SSO) experience. When the user’s client needs to access an API, it redirects the user to the AS 
+authorization endpoint to get an access token. At this point the AS authenticates the user and asks for consent for 
+the client to be allowed access. Because this happens within a web browser, the AS typically creates a session cookie, 
+so that the user does not have to login again.
+  
+![sso](images/sso.png)
+  
+### OpenID Connect
+OAuth can provide basic SSO functionality, but the primary focus is on delegated third-party access to APIs rather 
+than user identity or session management. The OpenID Connect (OIDC) suite of [standards](https://openid.net/developers/specs/) 
+extend OAuth2 with several features:
+- A standard way to retrieve identity information about a user, such as their name, email address, postal address, and telephone number. The client can access a UserInfo endpoint to retrieve identity claims as JSON using an OAuth2 access token with standard OIDC scopes.
+- A way for the client to request that the user is authenticated even if they have an existing session, and to ask for them to be authenticated in a particular way, such as with two-factor authentication.
+- Extensions for session management and logout, allowing clients to be notified when a user logs out of their session at the AS, enabling the user to log out of all clients at once (known as single logout)
