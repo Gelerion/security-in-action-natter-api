@@ -191,3 +191,43 @@ certificates until it finds a certificate of a root CA that it trusts directly. 
 be revoked or expire, in general the client may have to consider multiple possible certificate chains before it finds a 
 valid one. Verifying a certificate chain is complex and error-prone with many subtle details so you should always use a 
 mature library to do this.
+  
+## JWT access tokens
+Though token introspection solves the problem of how the API can determine if an access token is valid and the scope 
+associated with that token, it has a downside: the API must make a call to the AS every time it needs to validate 
+a token. An alternative is to use a self-contained token format such as JWTs.
+
+To validate a JWT-based access token, the API needs to first authenticate the JWT using a cryptographic key. you used 
+symmetric HMAC or authenticated encryption algorithms in which the same key is used to both create and verify messages. 
+This means that any party that can verify a JWT is also able to create one that will be trusted by all other parties. 
+Although this is suitable when the API and AS exist within the same trust boundary, it becomes a security risk when 
+the APIs are in different trust boundaries.
+
+To avoid these problems, the AS can switch to public key cryptography using digital signatures. Rather than having a 
+single shared key, the AS instead has a pair of keys: a private key and a public key. The AS can sign a JWT using the 
+private key, and then anybody with the public key can verify that the signature is genuine. However, the public key 
+cannot be used to create a new signature and so it’s safe to share the public key with any API that needs to validate 
+access tokens. For this reason, public key cryptography is also known as asymmetric cryptography, because the holder 
+of a private key can perform different operations to the holder of a public key. 
+  
+![assymetic jwt](images/assymetric_jwt.png)
+  
+#### Retrieving the public key
+The API can be directly configured with the public key of the AS. For example, you could create a keystore that contains 
+the public key, which the API can read when it first starts up. Although this will work, it has some disadvantages:
+- A Java keystore can only contain certificates, not raw public keys, so the AS would need to create a self-signed certificate purely to allow the public key to be imported into the keystore. This adds complexity that would not otherwise be required.
+- If the AS changes its public key, which is recommended, then the keystore will need to be manually updated to list the new public key and remove the old one. Because some access tokens using the old key may still be in use, the keystore may have to list both public keys until those old tokens expire. This means that two manual updates need to be performed: one to add the new public key, and a second update to remove the old public key when it’s no longer needed.
+
+A common solution is for the AS to publish its public key in a JSON document known as a JWK Set. The API can periodically 
+fetch the JWK Set from an HTTPS URI provided by the AS. The API can trust the public keys in the JWK Set because they 
+were retrieved over HTTPS from a trusted URI, and that HTTPS connection was authenticated using the server certificate 
+presented during the TLS handshake
+
+Many JWT libraries have built-in support for retrieving keys from a JWK Set over HTTPS, including periodically refreshing them.
+```
+var jwkSetUri = URI.create("https://as.example.com:8443/jwks_uri");
+var jwkSet = new RemoteJWKSet(jwkSetUri);
+```
+
+see:
+[SignedJwtAccessTokenStore](src/main/java/com/gelerion/security/in/action/token/SignedJwtAccessTokenStore.java)
