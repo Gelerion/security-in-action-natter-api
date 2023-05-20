@@ -159,3 +159,35 @@ see:
 You should make sure that the AS and the API have the same users and that the AS communicates the username to the 
 API in the `sub` or `username` fields from the introspection response
 ![Token introspection](images/toekn_introspection.png)
+  
+### Securing the HTTPS client configuration
+Because the API relies entirely on the AS to tell it if an access token is valid, and the scope of access it should 
+grant, it’s critical that the connection between the two be secure. While this connection should always be over HTTPS, 
+the default connection settings used by Java are not as secure as they could be.
+
+#### TLS cipher suites
+A TLS cipher suite is a collection of cryptographic algorithms that work together to create the secure channel between 
+a client and a server. When a TLS connection is first established, the client and server perform a handshake, in which 
+the server authenticates to the client, the client optionally authenticates to the server, and they agree upon a session 
+key to use for subsequent messages. The cipher suite specifies the algorithms to be used for authentication, key exchange, 
+and the block cipher and mode of operation to use for encrypting messages. The cipher suite to use is negotiated as 
+the first part of the handshake.
+  
+#### Certificate chains
+When configuring the trust store for your HTTPS client, you could choose to directly trust the server certificate for 
+that server. Although this seems more secure, it means that whenever the server changes its certificate, the client 
+would need to be updated to trust the new one. Many server certificates are valid for only 90 days. If the server is 
+ever compromised, then the client will continue trusting the compromised certificate until it’s manually updated to 
+remove it from the trust store.
+  
+To avoid these problems, the server certificate is signed by a CA, which itself has a (self-signed) certificate. 
+When a client connects to the server it receives the server’s current certificate during the handshake. To verify 
+this certificate is genuine, it looks up the corresponding CA certificate in the client trust store and checks that the 
+server certificate was signed by that CA and is not expired or revoked.
+
+In practice, the server certificate is often not signed directly by the CA. Instead, the CA signs certificates for one 
+or more intermediate CAs, which then sign server certificates. The client may therefore have to verify a chain of 
+certificates until it finds a certificate of a root CA that it trusts directly. Because CA certificates might themselves 
+be revoked or expire, in general the client may have to consider multiple possible certificate chains before it finds a 
+valid one. Verifying a certificate chain is complex and error-prone with many subtle details so you should always use a 
+mature library to do this.

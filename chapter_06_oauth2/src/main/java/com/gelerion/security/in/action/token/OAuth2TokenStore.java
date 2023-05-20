@@ -156,8 +156,26 @@ public class OAuth2TokenStore implements TokenStore {
     }
 
 
+    // Revoking a token follows the same pattern as token introspection: the client makes a POST request to a revocation
+    // endpoint at the AS, passing in the token in the request body,
     @Override
     public void revoke(Request request, String tokenId) {
-        throw new UnsupportedOperationException();
+        URI revocationEndpoint = URI.create("https://as.example.com:8443/oauth2/token/revoke");
+
+        var form = "token=" + URLEncoder.encode(tokenId, UTF_8) +
+                "&token_type_hint=access_token";
+
+        var httpRequest = HttpRequest.newBuilder()
+                .uri(revocationEndpoint)
+                .header("Content-Type",
+                        "application/x-www-form-urlencoded")
+                .header("Authorization", authorization)
+                .POST(HttpRequest.BodyPublishers.ofString(form))
+                .build();
+        try {
+            httpClient.send(httpRequest, BodyHandlers.discarding());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
