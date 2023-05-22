@@ -16,6 +16,7 @@
     <module>chapter_04_modern_token_auth</module>
     <module>chapter_05_self_contained_tokens</module>
     <module>chapter_06_oauth2</module>
+    <module>chapter_07_rbac_and_abac</module>
   </modules>
 
   <properties>
