@@ -33,3 +33,46 @@ whether a request should be permitted or denied. If more than one rule matches a
 then the question is which one should be preferred.
 
 #### Implementing ABAC decisions
+Although you could implement ABAC access control decisions directly in Java or another programming language, it’s often 
+clearer if the policy is expressed in the form of rules or domain-specific language (DSL) explicitly designed to 
+express access control decisions. You’ll implement a simple ABAC decision engine using the [Drools](https://drools.org) 
+business rules engine from Red Hat.  
+When it starts up, Drools will look for a file called `kmodule.xml` on the classpath that defines the configuration. 
+  
+see: [DroolsAccessController.java](src/main/java/com/gelerion/security/in/action/DroolsAccessController.java)
+and rules: [accessrules.drl](src/main/resources/accessrules.drl)
+
+Now that you have written an ABAC rule you can wire up the main method to apply your rules as a Spark `before()` filter
+that runs before the other access control rules.
+```
+var droolsController = new DroolsAccessController();
+before("/*", droolsController::enforcePolicy);
+```
+  
+#### Policy agents and API gateways
+ABAC enforcement can be complex as policies increase in complexity. Although general-purpose rule engines such as 
+Drools can simplify the process of writing ABAC rules, specialized components have been developed that implement 
+sophisticated policy enforcement. These components are typically implemented either as a policy agent that plugs into 
+an existing application server, web server, or reverse proxy, or else as standalone gateways that intercept requests 
+at the HTTP layer.
+
+For example, the Open Policy Agent (OPA, https://www.openpolicyagent.org) implements a policy engine using a DSL designed
+to make expressing access control decisions easy. It can be integrated into an existing infrastructure either using 
+its REST API or as a Go library, and integrations have been written for various reverse proxies and gateways to add 
+policy enforcement.
+  
+#### Distributed policy enforcement and XACML
+Rather than combining all the logic of enforcing policies into the agent itself, another approach is to centralize 
+the definition of policies in a separate server, which provides a REST API for policy agents to connect to and evaluate 
+policy decisions. By centralizing policy decisions, a security team can more easily review and adjust policy rules 
+for all APIs in an organization and ensure consistent rules are applied. This approach is most closely associated 
+with XACML, the eXtensible Access-Control Markup Language (see http://mng.bz/Qx2w), which defines an XML-based language 
+for policies with a rich set of functions for matching attributes and combining policy decisions.
+
+![XACML](images/xacml.png)
+XACML defines four services that cooperate to implement an ABAC system. The Policy Enforcement Point (PEP) rejects 
+requests that are denied by the Policy Decision Point (PDP). The Policy Information Point (PIP) retrieves attributes 
+that are relevant to policy decisions. A Policy Administration Point (PAP) can be used to define and manage policies.
+  
+The four components may be collocated or can be distributed on different machines. In particular, the XACML architecture 
+allows policy definitions to be centralized within an organization, allowing easy administration and review. 
